@@ -1,3 +1,4 @@
+import { DeleteProjectModal } from '@/components/features/project/delete-project-modal';
 import { ThemeProvider } from '@/providers/theme-provider';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
@@ -30,6 +31,7 @@ export default function RootLayout({
 				<ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
 					{children}
 					<Toaster />
+					<DeleteProjectModal />
 				</ThemeProvider>
 			</body>
 		</html>
