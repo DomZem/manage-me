@@ -1,13 +1,15 @@
 'use client';
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { ProjectLocalStorageService } from '@/services/project';
 import { selectedProjectStore } from '@/stores/selected-project-store';
+import { ProjectLocalStorageService } from '@/services/project';
+import { refreshProjectsAtom } from '@/stores/projects-store';
 import { useToast } from '@/hooks/use-toast';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 
 export const DeleteProjectModal = () => {
 	const [selectedProject, setSelectedProject] = useAtom(selectedProjectStore);
+	const refreshProjects = useSetAtom(refreshProjectsAtom);
 
 	const { toast } = useToast();
 
@@ -20,6 +22,8 @@ export const DeleteProjectModal = () => {
 		const deletetdProject = projectService.delete(selectedProject!.project.id);
 
 		if (deletetdProject) {
+			refreshProjects();
+
 			toast({
 				title: 'Project deleted',
 				description: (

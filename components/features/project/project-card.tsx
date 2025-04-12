@@ -22,7 +22,13 @@ export const ProjectCard = ({ project }: { project: Project }) => {
 
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant='ghost' size='icon'>
+						<Button
+							onClick={(e) => {
+								e.stopPropagation();
+							}}
+							variant='ghost'
+							size='icon'
+						>
 							<Ellipsis />
 						</Button>
 					</DropdownMenuTrigger>

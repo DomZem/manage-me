@@ -4,8 +4,8 @@
 
 Budujemy aplikację do zarządzania projektami.
 
-- [] Zrealizuj funkcjonalność CRUD dotyczącą projektu.
-- [] Dane zapisz w localStorage - napisz dedykowaną klasę do komunikacji z api (tymczasowym api będzie localStorage)
+- [x] Zrealizuj funkcjonalność CRUD dotyczącą projektu.
+- [x] Dane zapisz w localStorage - napisz dedykowaną klasę do komunikacji z api (tymczasowym api będzie localStorage)
 
 Model projektu: id, nazwa, opis
 
@@ -13,8 +13,8 @@ Model projektu: id, nazwa, opis
 
 ### Użytkownik
 
-- [] zamodeluj klasę zarządzającą zalogowanym użytkownikiem. Na ten moment chcemy mock zalogowanego użytkownika (bez opcji logowania, zakładania konta etc)
-- [] wyświetl imię/nazwisko zalogowanego użytkownika
+- [x] zamodeluj klasę zarządzającą zalogowanym użytkownikiem. Na ten moment chcemy mock zalogowanego użytkownika (bez opcji logowania, zakładania konta etc)
+- [x] wyświetl imię/nazwisko zalogowanego użytkownika
 
 ### Aktywny projekt
 
@@ -33,8 +33,8 @@ Model historyjki: id, nazwa, opis, priorytet (niski/średni/wysoki), projekt, da
 
 ### Użytkownicy
 
-- [] Rozbuduj model użytkownika o rolę. Możliwe role: admin, devops, developer.
-- [] Zamockuj listę użytkowników. Zalogowany pozostaje admin, na liście powinien być jeszcze minimum jeden developer i jeden devops
+- [x] Rozbuduj model użytkownika o rolę. Możliwe role: admin, devops, developer.
+- [x] Zamockuj listę użytkowników. Zalogowany pozostaje admin, na liście powinien być jeszcze minimum jeden developer i jeden devops
 
 ### Zadania
 

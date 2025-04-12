@@ -13,29 +13,33 @@ import { useToast } from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { useSetAtom } from 'jotai';
 import { z } from 'zod';
+import { Project } from '@/types/project';
 
-export const CreateProjectForm = () => {
+const updateProjectSchema = projectSchema.merge(
+	z.object({
+		id: z.string(),
+	})
+);
+
+export const UpdateProjectForm = ({ project }: { project?: Project }) => {
 	const { toast } = useToast();
 	const refreshProjects = useSetAtom(refreshProjectsAtom);
 
-	const form = useForm<z.infer<typeof projectSchema>>({
-		resolver: zodResolver(projectSchema),
-		defaultValues: {
-			name: '',
-			description: '',
-		},
+	const form = useForm<z.infer<typeof updateProjectSchema>>({
+		resolver: zodResolver(updateProjectSchema),
+		defaultValues: project,
 	});
 
-	const handleCreateProject = (project: z.infer<typeof projectSchema>) => {
+	const handleUpdateProject = (project: z.infer<typeof updateProjectSchema>) => {
 		console.log(project);
 		const projectService = new ProjectLocalStorageService();
-		projectService.create(project);
+		projectService.update(project.id, project);
 
 		toast({
-			title: 'Project created',
+			title: 'Project update',
 			description: (
 				<p>
-					Sucessfully created <span className='font-medium'>{project.name}</span> project
+					Sucessfully updated <span className='font-medium'>{project.name}</span> project
 				</p>
 			),
 		});
@@ -46,7 +50,7 @@ export const CreateProjectForm = () => {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(handleCreateProject)} className='space-y-8'>
+			<form onSubmit={form.handleSubmit(handleUpdateProject)} className='space-y-8'>
 				<FormField
 					control={form.control}
 					name='name'
@@ -76,7 +80,7 @@ export const CreateProjectForm = () => {
 				/>
 
 				<DialogFooter>
-					<Button type='submit'>Create</Button>
+					<Button type='submit'>Update</Button>
 				</DialogFooter>
 			</form>
 		</Form>

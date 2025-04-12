@@ -1,13 +1,12 @@
 'use client';
 
-import { ProjectLocalStorageService } from '@/services/project';
+import { projectsAtom } from '@/stores/projects-store';
 import { ProjectCard } from './project-card';
+import { useAtomValue } from 'jotai';
 import Link from 'next/link';
 
 export const ProjectsList = () => {
-	const service = new ProjectLocalStorageService();
-
-	const projects = service.getAll();
+	const projects = useAtomValue(projectsAtom);
 
 	return (
 		<ul className='flex flex-col gap-4'>
