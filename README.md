@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Lab1
 
-## Getting Started
+### Aplikacja ManagMe - starter
 
-First, run the development server:
+Budujemy aplikację do zarządzania projektami.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [] Zrealizuj funkcjonalność CRUD dotyczącą projektu.
+- [] Dane zapisz w localStorage - napisz dedykowaną klasę do komunikacji z api (tymczasowym api będzie localStorage)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Model projektu: id, nazwa, opis
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Lab2
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Użytkownik
 
-## Learn More
+- [] zamodeluj klasę zarządzającą zalogowanym użytkownikiem. Na ten moment chcemy mock zalogowanego użytkownika (bez opcji logowania, zakładania konta etc)
+- [] wyświetl imię/nazwisko zalogowanego użytkownika
 
-To learn more about Next.js, take a look at the following resources:
+### Aktywny projekt
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [] Zrealizuj w aplikacji wybór "aktualnego" projektu. Czyli wybieram projekt, apka go zapamiętuje (api) i do czasu zmiany wszystko co widzę w aplikacji jest związane jedynie z tym projektem.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Historyjki (funkcjonalności) projektu
 
-## Deploy on Vercel
+- [] Zrealizuj CRUD do historyjki (funkcjonalności) w projekcie
+- [] Historyjki powinny się zapisywać za pośrednictwem zaprojektowanej poprzednio klasy do komunikacji z api
+- [] Widok listy historyjek powininen dzielić historyjki na aktualnie wykonywane, czekające na wykonanie i zamknięte (lub jedna lista z filtrowaniem)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Model użytkownika: id, imię, nazwisko  
+Model historyjki: id, nazwa, opis, priorytet (niski/średni/wysoki), projekt, data utworzenia, stan (todo/doing/done), właściciel (id użytkownika)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Lab3
+
+### Użytkownicy
+
+- [] Rozbuduj model użytkownika o rolę. Możliwe role: admin, devops, developer.
+- [] Zamockuj listę użytkowników. Zalogowany pozostaje admin, na liście powinien być jeszcze minimum jeden developer i jeden devops
+
+### Zadania
+
+Zadanie to najmniejsza jednostka projektu. Jest wykonywana przez jedną osobę, jest przypisane do konkretnej historyjki, jest możliwe do zamknięcia.
+
+- [] Zrealizuj CRUD do zadania.
+- [] Zrealizuj widok szczegółów zadania - dane zadania, przypisana historyjka, data startu, zrealizowane roboczogodziny, przypisana osoba
+- [] Widok szczegółów zadania (lub dodatkowy widok) powinien dostarczać możliwość przypisania osoby do zadania (devops lub developer). Przypisanie osoby automatycznie zmienia stan zadania z "todo" na "doing" oraz uzupełnia datę startu zadania.
+- [] Widok szczegółów zadania (lub dodatkowy widok) powinien dostarczać możliwość zmiany stanu zadania na "done". Zmiana stanu automatycznie uzupełnia datę zakończenia zadania.
+- [] Zrealizuj widok tablicy kanban z zadaniami (kolumny todo, doing, done)
+- [] Zadania powinny się zapisywać za pośrednictwem mechanizmu komunikacji z api
+
+Model Zadania:
+
+- Nazwa
+- Opis
+- Priorytet (niski/średni/wysoki)
+- Historyjka do której przynależy zadanie
+- Przewidywany czas wykonania
+- Stan (todo, doing, done). Zadanie ze stanem doing musi posiadać czas startu oraz przypisanego użytkownika. Zadanie ze stanem done posiada przypisanego użytkownika oraz datę zakończenia
+- Data dodania
+- Data startu (stan zmieniony na doing)
+- Data zakończenia (stan zmieniony na done)
+- Użytkownik odpowiedzialny za zadanie (zadanie może wykonywać devops lub developer)
+
+## Lab4
+
+### Logowanie
+
+- [] Utwórz formularz logowania (pola: login, hasło)
+- [] Dane powinny zostać wysłane do API (zaprojektuj endpoint)
+
+### API
+
+- [] zaprojektuj endpoint do logowania - pobiera login i hasło, weryfikuje i zwraca token (JWT) i refreshToken lub błąd
+- [] zaprojektuj endpoint do odświeżania tokenu JWT
+- [] zaprojektuj endpoint do pobrania danych aktualnie zalogowanego użytkownika (pełny model użytkownika bez hasła)
+
+### Technologie
+
+Wykorzystaj dowolną technologię do utworzenia API - co lubisz. Jeśli nie masz pomysłu - przykładowy starter API znajdziesz w /miniapi (oparty o Node i bibliotekę Express)
