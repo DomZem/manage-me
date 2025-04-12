@@ -27,11 +27,31 @@ export const ProjectCard = ({ project }: { project: Project }) => {
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DropdownMenuItem className='cursor-pointer' onClick={() => setSelectedProject({ action: 'update', project })}>
-							Update
+						<DropdownMenuItem asChild>
+							<Button
+								className='w-full cursor-pointer'
+								size='sm'
+								variant='ghost'
+								onClick={(e) => {
+									e.stopPropagation();
+									setSelectedProject({ action: 'update', project });
+								}}
+							>
+								Update
+							</Button>
 						</DropdownMenuItem>
-						<DropdownMenuItem className='cursor-pointer' onClick={() => setSelectedProject({ action: 'delete', project })}>
-							Delete
+						<DropdownMenuItem asChild>
+							<Button
+								className='w-full cursor-pointer'
+								size='sm'
+								variant='ghost'
+								onClick={(e) => {
+									e.stopPropagation();
+									setSelectedProject({ action: 'delete', project });
+								}}
+							>
+								Delete
+							</Button>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
