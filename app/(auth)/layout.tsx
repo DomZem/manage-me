@@ -1,3 +1,4 @@
+import { DeleteProjectModal } from '@/components/features/project/delete-project-modal';
 import { UserLocalStorageService } from '@/services/user';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { Separator } from '@/components/ui/separator';
@@ -63,6 +64,7 @@ export default async function AuthedLayout({ children }: Readonly<{ children: Re
 					{children}
 				</SidebarInset>
 			</SidebarProvider>
+			<DeleteProjectModal />
 		</div>
 	);
 }
