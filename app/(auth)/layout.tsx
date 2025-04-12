@@ -1,10 +1,10 @@
 import { DeleteProjectModal } from '@/components/features/project/delete-project-modal';
 import { UserLocalStorageService } from '@/services/user';
 import { ModeToggle } from '@/components/ui/mode-toggle';
+import { NavUser } from '@/components/layout/nav-user';
 import { Separator } from '@/components/ui/separator';
 import { GalleryVerticalEnd } from 'lucide-react';
-import { NavUser } from '@/layout/nav-user';
-import { Menu } from '@/layout/menu';
+import { Menu } from '@/components/layout/menu';
 import {
 	Sidebar,
 	SidebarContent,
