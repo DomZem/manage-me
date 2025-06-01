@@ -1,4 +1,6 @@
 import { Project } from '@/types/project';
+import { StoryLocalStorageService } from './story';
+import type { Story } from '@/types/story';
 
 interface ProjectService {
 	create(project: Omit<Project, 'id'>): Project;
@@ -10,12 +12,51 @@ interface ProjectService {
 
 export class ProjectLocalStorageService implements ProjectService {
 	private readonly localStorageKey = 'projects';
+	private readonly storyService = new StoryLocalStorageService();
+
+	private createDefaultStories = (projectId: string) => {
+		const defaultStories: Omit<Story, 'id'>[] = [
+			{
+				name: 'Default Story 1',
+				description: 'Story description',
+				priority: 'medium',
+				createdAt: new Date().toISOString(),
+				status: 'todo',
+				projectId,
+				userId: '1',
+			},
+			{
+				name: 'Default Story 2',
+				description: 'This is the second default story.',
+				priority: 'low',
+				createdAt: new Date().toISOString(),
+				status: 'doing',
+				projectId,
+				userId: '1',
+			},
+			{
+				name: 'Default Story 3',
+				description: 'Story description',
+				priority: 'low',
+				createdAt: new Date().toISOString(),
+				status: 'done',
+				projectId,
+				userId: '1',
+			},
+		];
+
+		defaultStories.forEach((story) => {
+			this.storyService.create(story);
+		});
+	};
 
 	public create(project: Omit<Project, 'id'>) {
 		const projects = this.getAll();
 
 		const newProject = { id: String(projects.length + 1), ...project };
 		localStorage.setItem(this.localStorageKey, JSON.stringify([...projects, newProject]));
+
+		this.createDefaultStories(newProject.id);
 
 		return newProject;
 	}
@@ -51,6 +92,12 @@ export class ProjectLocalStorageService implements ProjectService {
 
 		const updatedProjects = projects.filter((project) => project.id !== id);
 		localStorage.setItem(this.localStorageKey, JSON.stringify(updatedProjects));
+
+		if (projectToDelete) {
+			this.storyService.getAllByProjectId(id).forEach((story) => {
+				this.storyService.delete(story.id);
+			});
+		}
 
 		return projectToDelete;
 	}

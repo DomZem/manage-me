@@ -1,16 +1,29 @@
 import type { Story } from '@/types/story';
 
 interface StoryService {
-	create(story: Omit<Story, 'id'>): Story;
-	getOne(id: string): Story | undefined;
 	getAll(): Story[];
 	getAllByProjectId(projectId: string): Story[];
+	getOne(id: string): Story | undefined;
+	create(story: Omit<Story, 'id'>): Story;
 	update(id: string, story: Omit<Story, 'id'>): Story | undefined;
 	delete(id: string): Story | undefined;
 }
 
 export class StoryLocalStorageService implements StoryService {
 	private readonly localStorageKey = 'stories';
+
+	public getAll(): Story[] {
+		const data = localStorage.getItem(this.localStorageKey);
+		return data ? JSON.parse(data) : [];
+	}
+
+	public getOne(id: string) {
+		return this.getAll().find((story) => story.id === id);
+	}
+
+	public getAllByProjectId(projectId: string): Story[] {
+		return this.getAll().filter((story) => story.projectId === projectId);
+	}
 
 	public create(story: Omit<Story, 'id'>) {
 		const stories = this.getAll();
@@ -19,19 +32,6 @@ export class StoryLocalStorageService implements StoryService {
 		localStorage.setItem(this.localStorageKey, JSON.stringify([...stories, newStory]));
 
 		return newStory;
-	}
-
-	public getOne(id: string) {
-		return this.getAll().find((story) => story.id === id);
-	}
-
-	public getAll(): Story[] {
-		const data = localStorage.getItem(this.localStorageKey);
-		return data ? JSON.parse(data) : [];
-	}
-
-	public getAllByProjectId(projectId: string): Story[] {
-		return this.getAll().filter((story) => story.projectId === projectId);
 	}
 
 	public update(id: string, story: Omit<Story, 'id'>) {
