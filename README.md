@@ -22,8 +22,8 @@ Model projektu: id, nazwa, opis
 
 ### Historyjki (funkcjonalności) projektu
 
-- [] Zrealizuj CRUD do historyjki (funkcjonalności) w projekcie
-- [] Historyjki powinny się zapisywać za pośrednictwem zaprojektowanej poprzednio klasy do komunikacji z api
+- [x] Zrealizuj CRUD do historyjki (funkcjonalności) w projekcie
+- [x] Historyjki powinny się zapisywać za pośrednictwem zaprojektowanej poprzednio klasy do komunikacji z api
 - [] Widok listy historyjek powininen dzielić historyjki na aktualnie wykonywane, czekające na wykonanie i zamknięte (lub jedna lista z filtrowaniem)
 
 Model użytkownika: id, imię, nazwisko  
@@ -76,3 +76,33 @@ Model Zadania:
 ### Technologie
 
 Wykorzystaj dowolną technologię do utworzenia API - co lubisz. Jeśli nie masz pomysłu - przykładowy starter API znajdziesz w /miniapi (oparty o Node i bibliotekę Express)
+
+## Lab5
+
+### Wygląd aplikacji
+
+- Skorzystaj z dowolnej biblioteki CSS/komponentów (przykładowe biblioteki poniżej) do dopracowania UI aplikacji
+- Poćwicz użycie ai w vscode - wykorzystaj copilota w trybie edit/agenta do implementacji wybranej biblioteki do istniejącego projektu/html-a
+- Zaimplementuj tryb ciemny/jasny (przełącznik na stronie lub zależny od ustawień przeglądarki)
+- Jeśli chcesz możesz zaimplementować prototyp własnej biblioteki styli/komponentów.
+
+#### Przykładowe biblioteki CSS/komponentów:
+
+- [Bootstrap](https://getbootstrap.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Material UI](https://mui.com)
+- [Material Web](https://m3.material.io/develop/web)
+- [PrimeNg](https://primeng.org/)
+- [Ant Design](https://ant.design/)
+- [Angular Material](https://material.angular.io/)
+- [ChakraUI](https://v2.chakra-ui.com/)
+- [KitWind](https://kitwind.io/products/)
+- [TailBlocks](https://tailblocks.cc/)
+- [Tailwindcomponents](https://tailwindcomponents.com/)
+
+## Lab 6
+
+### Baza danych
+
+- Zmień miejsce magazynowania danych w aplikacji z localStorage na bazę danych. Wykorzystaj bazę NoSQL (np. MongoDB, Google Firestore, Supabase).
+- Komunikację z bazą danych może się odbywać zarówno bezpośrednio z aplikacji webowej jak i z pośrednictwem serwera backendowego (do wyboru)
