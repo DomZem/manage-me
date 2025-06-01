@@ -13,8 +13,10 @@ export class ProjectLocalStorageService implements ProjectService {
 
 	public create(project: Omit<Project, 'id'>) {
 		const projects = this.getAll();
+
 		const newProject = { id: String(projects.length + 1), ...project };
 		localStorage.setItem(this.localStorageKey, JSON.stringify([...projects, newProject]));
+
 		return newProject;
 	}
 
@@ -23,7 +25,8 @@ export class ProjectLocalStorageService implements ProjectService {
 	}
 
 	public getAll(): Project[] {
-		return JSON.parse(localStorage.getItem(this.localStorageKey) || '[]');
+		const data = localStorage.getItem(this.localStorageKey);
+		return data ? JSON.parse(data) : [];
 	}
 
 	public update(id: string, project: Omit<Project, 'id'>) {
