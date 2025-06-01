@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { useSetAtom } from 'jotai';
 import { z } from 'zod';
 
-export const CreateProjectForm = () => {
+export const CreateProjectForm = ({ onSuccess }: { onSuccess: () => void }) => {
 	const { toast } = useToast();
 	const refreshProjects = useSetAtom(refreshProjectsAtom);
 
@@ -28,20 +28,22 @@ export const CreateProjectForm = () => {
 
 	const handleCreateProject = (project: z.infer<typeof projectSchema>) => {
 		console.log(project);
+
 		const projectService = new ProjectLocalStorageService();
-		projectService.create(project);
+		const createdProject = projectService.create(project);
 
 		toast({
 			title: 'Project created',
 			description: (
 				<p>
-					Sucessfully created <span className='font-medium'>{project.name}</span> project
+					Sucessfully created <span className='font-medium'>{createdProject.name}</span> project
 				</p>
 			),
 		});
 
 		form.reset();
 		refreshProjects();
+		onSuccess();
 	};
 
 	return (

@@ -20,7 +20,7 @@ export const UpdateProjectModal = () => {
 					<DialogDescription>Update the project details</DialogDescription>
 				</DialogHeader>
 
-				<UpdateProjectForm project={selectedProject?.project} />
+				<UpdateProjectForm project={selectedProject?.project} onSuccess={handleClose} />
 			</DialogContent>
 		</Dialog>
 	);

@@ -21,7 +21,7 @@ const updateProjectSchema = projectSchema.merge(
 	})
 );
 
-export const UpdateProjectForm = ({ project }: { project?: Project }) => {
+export const UpdateProjectForm = ({ project, onSuccess }: { project?: Project; onSuccess: () => void }) => {
 	const { toast } = useToast();
 	const refreshProjects = useSetAtom(refreshProjectsAtom);
 
@@ -46,6 +46,7 @@ export const UpdateProjectForm = ({ project }: { project?: Project }) => {
 
 		form.reset();
 		refreshProjects();
+		onSuccess();
 	};
 
 	return (
