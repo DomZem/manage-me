@@ -1,5 +1,3 @@
-import { DeleteProjectModal } from '@/components/features/project/delete-project-modal';
-import { UpdateProjectModal } from '@/components/features/project/update-project-modal';
 import { UserLocalStorageService } from '@/services/user';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { NavUser } from '@/components/layout/nav-user';
@@ -65,8 +63,6 @@ export default async function AuthedLayout({ children }: Readonly<{ children: Re
 					{children}
 				</SidebarInset>
 			</SidebarProvider>
-			<DeleteProjectModal />
-			<UpdateProjectModal />
 		</div>
 	);
 }
