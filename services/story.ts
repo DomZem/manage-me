@@ -1,11 +1,12 @@
 import type { Story } from '@/types/story';
+import { v4 as uuidv4 } from 'uuid';
 
 interface StoryService {
 	getAll(): Story[];
 	getAllByProjectId(projectId: string): Story[];
 	getOne(id: string): Story | undefined;
-	create(story: Omit<Story, 'id'>): Story;
-	update(id: string, story: Omit<Story, 'id'>): Story | undefined;
+	create(story: Omit<Story, 'id' | 'createdAt'>): Story;
+	update(id: string, story: Omit<Story, 'id' | 'createdAt'>): Story | undefined;
 	delete(id: string): Story | undefined;
 }
 
@@ -25,16 +26,16 @@ export class StoryLocalStorageService implements StoryService {
 		return this.getAll().filter((story) => story.projectId === projectId);
 	}
 
-	public create(story: Omit<Story, 'id'>) {
+	public create(story: Omit<Story, 'id' | 'createdAt'>) {
 		const stories = this.getAll();
 
-		const newStory = { id: String(stories.length + 1), ...story };
+		const newStory = { ...story, id: uuidv4(), createdAt: new Date().toISOString() };
 		localStorage.setItem(this.localStorageKey, JSON.stringify([...stories, newStory]));
 
 		return newStory;
 	}
 
-	public update(id: string, story: Omit<Story, 'id'>) {
+	public update(id: string, story: Omit<Story, 'id' | 'createdAt'>) {
 		const stories = this.getAll();
 
 		const storyToUpdate = stories.find((story) => story.id === id);

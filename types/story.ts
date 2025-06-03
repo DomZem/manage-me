@@ -1,5 +1,14 @@
-export type StoryStatus = 'todo' | 'doing' | 'done';
-export type StoryPriority = 'low' | 'medium' | 'high';
+export enum StoryStatus {
+	Todo = 'todo',
+	Doing = 'doing',
+	Done = 'done',
+}
+
+export enum StoryPriority {
+	Low = 'low',
+	Medium = 'medium',
+	High = 'high',
+}
 
 export interface Story {
 	id: string;
