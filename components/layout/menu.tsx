@@ -15,7 +15,7 @@ const items: {
 		title: 'Projects',
 		url: '/projects',
 		icon: Home,
-		isActive: (pathname: string) => pathname === '/projects',
+		isActive: (pathname: string) => pathname.startsWith('/projects'),
 	},
 ];
 

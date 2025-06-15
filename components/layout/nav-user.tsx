@@ -1,13 +1,16 @@
 'use client';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChevronsUpDown } from 'lucide-react';
+import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { User } from '@/types/user';
+import { useRouter } from 'next/navigation';
 
 export function NavUser({ user }: { user: User }) {
 	const { isMobile } = useSidebar();
+
+	const router = useRouter();
 
 	const userFullName = `${user.firstName} ${user.lastName}`;
 
@@ -44,16 +47,10 @@ export function NavUser({ user }: { user: User }) {
 
 						<DropdownMenuSeparator />
 
-						{/* <DropdownMenuItem
-							onClick={() =>
-								signOut({
-									redirectTo: '/',
-								})
-							}
-						>
+						<DropdownMenuItem onClick={() => router.push('/')}>
 							<LogOut />
 							Log out
-						</DropdownMenuItem> */}
+						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</SidebarMenuItem>
