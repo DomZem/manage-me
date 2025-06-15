@@ -1,6 +1,6 @@
 'use client';
 
-import { storiesAtom } from '@/stores/stories-store';
+import { storiesAtom } from '@/stores/story/stories-store';
 import { StoryStatus } from '@/types/story';
 import { StoryCard } from './story-card';
 import { useAtomValue } from 'jotai';

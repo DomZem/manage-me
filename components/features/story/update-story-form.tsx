@@ -12,7 +12,7 @@ import { useSetAtom } from 'jotai';
 import { z } from 'zod';
 import { storySchema } from '@/common/validation/story';
 import { StoryPriority, StoryStatus, type Story } from '@/types/story';
-import { refreshStoriesAtom } from '@/stores/stories-store';
+import { refreshStoriesAtom } from '@/stores/story/stories-store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { StoryLocalStorageService } from '@/services/story';
 

@@ -1,4 +1,4 @@
-import { selectedStoryStore } from '@/stores/selected-story-store';
+import { selectedStoryStore } from '@/stores/story/selected-story-store';
 import { useSetAtom } from 'jotai';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Ellipsis, SquarePen, Trash2 } from 'lucide-react';

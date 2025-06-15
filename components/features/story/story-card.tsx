@@ -1,4 +1,4 @@
-import { selectedStoryStore } from '@/stores/selected-story-store';
+import { selectedStoryStore } from '@/stores/story/selected-story-store';
 import { Card } from '@/components/ui/card';
 import type { Story } from '@/types/story';
 import { useSetAtom } from 'jotai';

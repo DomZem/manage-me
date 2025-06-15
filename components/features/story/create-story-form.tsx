@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { useSetAtom } from 'jotai';
 import { z } from 'zod';
-import { refreshStoriesAtom } from '@/stores/stories-store';
+import { refreshStoriesAtom } from '@/stores/story/stories-store';
 import { storySchema } from '@/common/validation/story';
 import { StoryPriority, StoryStatus } from '@/types/story';
 import { StoryLocalStorageService } from '@/services/story';

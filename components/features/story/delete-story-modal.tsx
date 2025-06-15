@@ -1,8 +1,8 @@
 'use client';
 
-import { selectedStoryStore } from '@/stores/selected-story-store';
+import { selectedStoryStore } from '@/stores/story/selected-story-store';
 import { StoryLocalStorageService } from '@/services/story';
-import { refreshStoriesAtom } from '@/stores/stories-store';
+import { refreshStoriesAtom } from '@/stores/story/stories-store';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAtom, useSetAtom } from 'jotai';

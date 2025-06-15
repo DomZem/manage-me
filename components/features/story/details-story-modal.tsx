@@ -1,7 +1,7 @@
 'use client';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { selectedStoryStore } from '@/stores/selected-story-store';
+import { selectedStoryStore } from '@/stores/story/selected-story-store';
 import { useAtom } from 'jotai';
 import { TasksList } from '../task/tasks-list';
 import { CreateTaskModal } from '../task/create-task-modal';
