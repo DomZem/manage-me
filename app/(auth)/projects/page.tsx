@@ -10,7 +10,9 @@ export default function ProjectsPage() {
 				<h2 className='text-lg font-semibold'>Projects</h2>
 				<CreateProjectModal />
 			</div>
+
 			<ProjectsList />
+
 			<DeleteProjectModal />
 			<UpdateProjectModal />
 		</div>

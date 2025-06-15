@@ -4,7 +4,7 @@ import { storiesAtom } from '@/stores/stories-store';
 import { StoryStatus } from '@/types/story';
 import { StoryCard } from './story-card';
 import { useAtomValue } from 'jotai';
-import { cn } from '@/lib/utils';
+import { CircleCheck, CircleDot, Loader } from 'lucide-react';
 
 export const ProjectStoriesList = ({ projectId }: { projectId: string }) => {
 	const stories = useAtomValue(storiesAtom);
@@ -16,7 +16,13 @@ export const ProjectStoriesList = ({ projectId }: { projectId: string }) => {
 			{Object.values(StoryStatus).map((storyVariant) => (
 				<li className='shrink-0 p-4 space-y-4 rounded-md min-h-full basis-80 border' key={storyVariant}>
 					<div className='flex gap-3 items-center'>
-						<span className={cn('size-4 inline-block rounded-full ', storyVariant === StoryStatus.Todo ? 'bg-green-600' : storyVariant === StoryStatus.Done ? 'bg-red-600' : 'bg-orange-600')}></span>
+						{storyVariant === StoryStatus.Todo ? (
+							<CircleDot className='text-purple-600' size={16} />
+						) : storyVariant === StoryStatus.Doing ? (
+							<Loader className='text-orange-600' size={16} />
+						) : (
+							<CircleCheck className='text-green-600' size={16} />
+						)}
 
 						<h3 className='font-semibold'>
 							{storyVariant.charAt(0).toUpperCase()}
