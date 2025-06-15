@@ -3,8 +3,8 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAtom, useSetAtom } from 'jotai';
-import { refreshTasksAtom } from '@/stores/tasks-store';
-import { selectedTaskStore } from '@/stores/selected-task-store';
+import { refreshTasksAtom } from '@/stores/task/tasks-store';
+import { selectedTaskStore } from '@/stores/task/selected-task-store';
 import { TaskLocalStorageService } from '@/services/task';
 
 export const DeleteTaskModal = () => {

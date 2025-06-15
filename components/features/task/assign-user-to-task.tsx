@@ -11,7 +11,7 @@ import type { User } from '@/types/user';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { TaskLocalStorageService } from '@/services/task';
-import { refreshTasksAtom } from '@/stores/tasks-store';
+import { refreshTasksAtom } from '@/stores/task/tasks-store';
 import { useSetAtom } from 'jotai';
 
 const userService = new UserLocalStorageService();

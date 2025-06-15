@@ -1,4 +1,4 @@
-import { tasksAtom } from '@/stores/tasks-store';
+import { tasksAtom } from '@/stores/task/tasks-store';
 import { useAtomValue } from 'jotai';
 import { TaskCard } from './task-card';
 

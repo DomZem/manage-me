@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import { useSetAtom } from 'jotai';
 import { z } from 'zod';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { refreshTasksAtom } from '@/stores/tasks-store';
+import { refreshTasksAtom } from '@/stores/task/tasks-store';
 import { taskSchema } from '@/common/validation/task';
 import { TaskLocalStorageService } from '@/services/task';
 import { StoryPriority } from '@/types/story';
