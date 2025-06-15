@@ -1,6 +1,6 @@
 'use client';
 
-import { projectsAtom } from '@/stores/projects-store';
+import { projectsAtom } from '@/stores/project/projects-store';
 import { ProjectCard } from './project-card';
 import { useAtomValue } from 'jotai';
 import Link from 'next/link';

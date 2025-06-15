@@ -2,7 +2,7 @@
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { ProjectLocalStorageService } from '@/services/project';
-import { refreshProjectsAtom } from '@/stores/projects-store';
+import { refreshProjectsAtom } from '@/stores/project/projects-store';
 import { projectSchema } from '@/common/validation/project';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogFooter } from '@/components/ui/dialog';

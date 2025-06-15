@@ -1,6 +1,6 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
-import { selectedProjectStore } from '@/stores/selected-project-store';
+import { selectedProjectStore } from '@/stores/project/selected-project-store';
 import { Ellipsis, PanelsTopLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Project } from '@/types/project';

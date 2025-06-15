@@ -1,7 +1,7 @@
 'use client';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { selectedProjectStore } from '@/stores/selected-project-store';
+import { selectedProjectStore } from '@/stores/project/selected-project-store';
 import { UpdateProjectForm } from './update-project-form';
 import { useAtom } from 'jotai';
 

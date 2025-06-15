@@ -1,9 +1,9 @@
 'use client';
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { selectedProjectStore } from '@/stores/selected-project-store';
+import { selectedProjectStore } from '@/stores/project/selected-project-store';
 import { ProjectLocalStorageService } from '@/services/project';
-import { refreshProjectsAtom } from '@/stores/projects-store';
+import { refreshProjectsAtom } from '@/stores/project/projects-store';
 import { useToast } from '@/hooks/use-toast';
 import { useAtom, useSetAtom } from 'jotai';
 
