@@ -1,4 +1,4 @@
-import { ProjectLocalStorageService } from '@/services/project';
+import { ProjectLocalStorageService } from '@/services/project/project-local-storage';
 import { Project } from '@/types/project';
 import { atom } from 'jotai';
 

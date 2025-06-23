@@ -1,15 +1,15 @@
+import { StoryLocalStorageService } from '../story';
 import { Project } from '@/types/project';
-import { StoryLocalStorageService } from './story';
 
-interface ProjectService {
-	create(project: Omit<Project, 'id'>): Project;
-	getOne(id: string): Project | undefined;
+export interface IProjectService {
 	getAll(): Project[];
+	getOne(id: string): Project | undefined;
+	create(project: Omit<Project, 'id'>): Project;
 	update(id: string, project: Omit<Project, 'id'>): Project | undefined;
 	delete(id: string): Project | undefined;
 }
 
-export class ProjectLocalStorageService implements ProjectService {
+export class ProjectLocalStorageService implements IProjectService {
 	private readonly localStorageKey = 'projects';
 	private readonly storyService = new StoryLocalStorageService();
 
