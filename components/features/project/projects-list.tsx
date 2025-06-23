@@ -1,12 +1,19 @@
 'use client';
 
-import { projectsAtom } from '@/stores/project/projects-store';
 import { ProjectCard } from './project-card';
-import { useAtomValue } from 'jotai';
 import Link from 'next/link';
+import { useProjects } from '@/hooks/project/useProjects';
 
 export const ProjectsList = () => {
-	const projects = useAtomValue(projectsAtom);
+	const { data: projects, isLoading } = useProjects({});
+
+	if (!projects) {
+		return null;
+	}
+
+	if (isLoading) {
+		return <div></div>;
+	}
 
 	return (
 		<ul className='flex flex-col gap-4'>

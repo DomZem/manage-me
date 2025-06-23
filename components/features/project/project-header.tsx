@@ -1,6 +1,6 @@
 'use client';
 
-import { ProjectLocalStorageService } from '@/services/project';
+import { ProjectLocalStorageService } from '@/services/project/project-local-storage';
 import { CreateStoryModal } from '../story/create-story-modal';
 
 const projectService = new ProjectLocalStorageService();

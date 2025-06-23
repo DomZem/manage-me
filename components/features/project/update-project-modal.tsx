@@ -2,7 +2,8 @@
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { selectedProjectStore } from '@/stores/project/selected-project-store';
-import { UpdateProjectForm } from './update-project-form';
+import { useUpdateProject } from '@/hooks/project/useUpdateProject';
+import { ProjectForm } from './project-form';
 import { useAtom } from 'jotai';
 
 export const UpdateProjectModal = () => {
@@ -12,6 +13,12 @@ export const UpdateProjectModal = () => {
 		setSelectedProject(null);
 	};
 
+	const updateProject = useUpdateProject({
+		onSuccess: () => {
+			handleClose();
+		},
+	});
+
 	return (
 		<Dialog open={selectedProject?.action === 'update'} onOpenChange={handleClose}>
 			<DialogContent>
@@ -20,7 +27,16 @@ export const UpdateProjectModal = () => {
 					<DialogDescription>Update the project details</DialogDescription>
 				</DialogHeader>
 
-				<UpdateProjectForm project={selectedProject?.project} onSuccess={handleClose} />
+				{selectedProject?.project && (
+					<ProjectForm
+						variant='update'
+						isSubmitting={updateProject.isPending}
+						project={selectedProject.project}
+						onSubmit={async (project) => {
+							await updateProject.mutateAsync(project);
+						}}
+					/>
+				)}
 			</DialogContent>
 		</Dialog>
 	);

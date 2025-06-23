@@ -2,49 +2,20 @@
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { selectedProjectStore } from '@/stores/project/selected-project-store';
-import { ProjectLocalStorageService } from '@/services/project';
-import { refreshProjectsAtom } from '@/stores/project/projects-store';
-import { useToast } from '@/hooks/use-toast';
-import { useAtom, useSetAtom } from 'jotai';
+import { useDeleteProject } from '@/hooks/project/useDeleteProject';
+import { useAtom } from 'jotai';
 
 export const DeleteProjectModal = () => {
 	const [selectedProject, setSelectedProject] = useAtom(selectedProjectStore);
-	const refreshProjects = useSetAtom(refreshProjectsAtom);
-
-	const { toast } = useToast();
+	const deleteProject = useDeleteProject();
 
 	const handleClose = () => {
 		setSelectedProject(null);
 	};
 
-	const handleDelete = () => {
-		const projectService = new ProjectLocalStorageService();
-		const deletetdProject = projectService.delete(selectedProject!.project.id);
-
-		if (deletetdProject) {
-			refreshProjects();
-
-			toast({
-				title: 'Project deleted',
-				description: (
-					<p>
-						Sucessfull deleted <span className='font-medium'>{deletetdProject!.name}</span> project
-					</p>
-				),
-			});
-
-			return;
-		}
-
-		toast({
-			title: 'Project not found',
-			description: (
-				<p>
-					Project <span className='font-medium'>{selectedProject!.project.name}</span> not found
-				</p>
-			),
-			variant: 'destructive',
-		});
+	const handleDelete = async () => {
+		if (!selectedProject) return;
+		await deleteProject.mutateAsync(selectedProject.project.id);
 	};
 
 	return (
@@ -56,7 +27,9 @@ export const DeleteProjectModal = () => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={handleClose}>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+					<AlertDialogAction disabled={deleteProject.isPending} onClick={handleDelete}>
+						Delete
+					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

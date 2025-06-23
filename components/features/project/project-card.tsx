@@ -17,7 +17,8 @@ export const ProjectCard = ({ project }: { project: Project }) => {
 						<PanelsTopLeft />
 						<CardTitle>{project.name}</CardTitle>
 					</div>
-					<CardDescription>#{project.id}</CardDescription>
+
+					<CardDescription>{project.description}</CardDescription>
 				</div>
 
 				<DropdownMenu>

@@ -11,8 +11,7 @@ import { useForm } from 'react-hook-form';
 import { useSetAtom } from 'jotai';
 import { z } from 'zod';
 import { refreshStoriesAtom } from '@/stores/story/stories-store';
-import { storySchema } from '@/common/validation/story';
-import { StoryPriority, StoryStatus } from '@/types/story';
+import { PRIORITIES, STORY_STATUSES, storySchema } from '@/common/validation/story';
 import { StoryLocalStorageService } from '@/services/story';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -25,9 +24,9 @@ export const CreateStoryForm = ({ onSuccess, projectId }: { onSuccess: () => voi
 		defaultValues: {
 			name: '',
 			description: '',
-			status: StoryStatus.Todo,
-			priority: StoryPriority.Low,
-			userId: 'unknown',
+			status: 'todo',
+			priority: 'medium',
+			userId: '',
 			projectId,
 		},
 	});
@@ -96,7 +95,7 @@ export const CreateStoryForm = ({ onSuccess, projectId }: { onSuccess: () => voi
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									{Object.values(StoryStatus).map((status) => (
+									{STORY_STATUSES.map((status) => (
 										<SelectItem key={status} value={status}>
 											{status.charAt(0).toUpperCase() + status.slice(1)}
 										</SelectItem>
@@ -121,7 +120,7 @@ export const CreateStoryForm = ({ onSuccess, projectId }: { onSuccess: () => voi
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									{Object.values(StoryPriority).map((priority) => (
+									{PRIORITIES.map((priority) => (
 										<SelectItem key={priority} value={priority}>
 											{priority.charAt(0).toUpperCase() + priority.slice(1)}
 										</SelectItem>
