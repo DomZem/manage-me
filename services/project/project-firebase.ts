@@ -3,8 +3,6 @@ import { createProjectSchema, projectSchema } from '@/common/validation/project'
 import type { Project } from '@/types/project';
 import { db } from '@/lib/firebase';
 
-const COLLECTION_NAME = 'projects';
-
 export interface IProjectService {
 	getAll(): Promise<Project[]>;
 	getOne(id: string): Promise<Project | undefined>;
@@ -14,9 +12,11 @@ export interface IProjectService {
 }
 
 export class ProjectFirebaseService implements IProjectService {
+	private readonly COLLECTION_NAME = 'projects';
+
 	// DONE
-	async getAll(): Promise<Project[]> {
-		const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
+	public async getAll(): Promise<Project[]> {
+		const querySnapshot = await getDocs(collection(db, this.COLLECTION_NAME));
 
 		const projects: Project[] = [];
 
@@ -35,8 +35,8 @@ export class ProjectFirebaseService implements IProjectService {
 		return projects;
 	}
 
-	async getOne(id: string): Promise<Project | undefined> {
-		const docRef = doc(db, COLLECTION_NAME, id);
+	public async getOne(id: string): Promise<Project | undefined> {
+		const docRef = doc(db, this.COLLECTION_NAME, id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) return undefined;
@@ -53,27 +53,27 @@ export class ProjectFirebaseService implements IProjectService {
 	}
 
 	// DONE
-	async create(project: Omit<Project, 'id'>): Promise<Project> {
+	public async create(project: Omit<Project, 'id'>): Promise<Project> {
 		const parseResult = createProjectSchema.safeParse(project);
 
 		if (!parseResult.success) {
 			throw new Error(`Project is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = await addDoc(collection(db, COLLECTION_NAME), parseResult.data);
+		const docRef = await addDoc(collection(db, this.COLLECTION_NAME), parseResult.data);
 
 		return { id: docRef.id, ...parseResult.data };
 	}
 
 	// DONE
-	async update(updatedProject: Project): Promise<Project> {
+	public async update(updatedProject: Project): Promise<Project> {
 		const parseResult = projectSchema.safeParse(updatedProject);
 
 		if (!parseResult.success) {
 			throw new Error(`Project is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = doc(db, COLLECTION_NAME, parseResult.data.id);
+		const docRef = doc(db, this.COLLECTION_NAME, parseResult.data.id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
@@ -85,8 +85,8 @@ export class ProjectFirebaseService implements IProjectService {
 	}
 
 	// DONE
-	async delete(id: string): Promise<Project> {
-		const docRef = doc(db, COLLECTION_NAME, id);
+	public async delete(id: string): Promise<Project> {
+		const docRef = doc(db, this.COLLECTION_NAME, id);
 		const docSnap = await getDoc(docRef);
 
 		const projectToDelete = { id: docSnap.id, ...docSnap.data() };
