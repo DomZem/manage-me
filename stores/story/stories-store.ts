@@ -1,4 +1,4 @@
-import { StoryLocalStorageService } from '@/services/story';
+import { StoryLocalStorageService } from '@/services/story/story-local-storage';
 import type { Story } from '@/types/story';
 import { atom } from 'jotai';
 

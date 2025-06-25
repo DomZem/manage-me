@@ -1,4 +1,4 @@
-import { StoryLocalStorageService } from '../story';
+import { StoryLocalStorageService } from '../story/story-local-storage';
 import { Project } from '@/types/project';
 
 export interface IProjectService {
