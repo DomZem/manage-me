@@ -1,22 +1,4 @@
-export enum StoryStatus {
-	Todo = 'todo',
-	Doing = 'doing',
-	Done = 'done',
-}
+import type { storySchema } from '@/common/validation/story';
+import type { z } from 'zod';
 
-export enum StoryPriority {
-	Low = 'low',
-	Medium = 'medium',
-	High = 'high',
-}
-
-export interface Story {
-	id: string;
-	name: string;
-	description: string;
-	priority: StoryPriority;
-	createdAt: string;
-	status: StoryStatus;
-	projectId: string;
-	userId: string;
-}
+export type Story = Required<z.infer<typeof storySchema>>;

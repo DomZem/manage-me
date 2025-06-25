@@ -1,13 +1,11 @@
 import { z } from 'zod';
-
-export const taskPrioritySchema = z.enum(['low', 'medium', 'high']);
+import { priorityEnumSchema } from './story';
 
 const taskBaseSchema = z.object({
 	id: z.string().optional(),
-	createdAt: z.coerce.date().default(() => new Date()),
 	name: z.string().trim().min(1, 'Name is required'),
 	description: z.string().trim().min(1, 'Description is required'),
-	priority: taskPrioritySchema,
+	priority: priorityEnumSchema,
 	elapsedTimeToFinish: z.coerce.number().positive(),
 	storyId: z.string(),
 });

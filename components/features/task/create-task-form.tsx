@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { refreshTasksAtom } from '@/stores/task/tasks-store';
 import { taskSchema } from '@/common/validation/task';
 import { TaskLocalStorageService } from '@/services/task';
-import { StoryPriority } from '@/types/story';
+import { PRIORITIES } from '@/common/validation/story';
 
 export const CreateTaskForm = ({ storyId }: { storyId: string }) => {
 	const { toast } = useToast();
@@ -95,7 +95,7 @@ export const CreateTaskForm = ({ storyId }: { storyId: string }) => {
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									{Object.values(StoryPriority).map((priority) => (
+									{PRIORITIES.map((priority) => (
 										<SelectItem key={priority} value={priority}>
 											{priority.charAt(0).toUpperCase() + priority.slice(1)}
 										</SelectItem>

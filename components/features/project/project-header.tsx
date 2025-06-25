@@ -1,12 +1,10 @@
 'use client';
 
-import { ProjectLocalStorageService } from '@/services/project/project-local-storage';
+import { useProject } from '@/hooks/project/useProject';
 import { CreateStoryModal } from '../story/create-story-modal';
 
-const projectService = new ProjectLocalStorageService();
-
 export const ProjectHeader = ({ projectId }: { projectId: string }) => {
-	const project = projectService.getOne(projectId);
+	const { data: project } = useProject(projectId);
 
 	if (!project) {
 		return null;

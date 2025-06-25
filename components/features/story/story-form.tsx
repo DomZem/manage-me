@@ -6,54 +6,56 @@ import { DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
-import { useSetAtom } from 'jotai';
 import { z } from 'zod';
-import { refreshStoriesAtom } from '@/stores/story/stories-store';
-import { PRIORITIES, STORY_STATUSES, storySchema } from '@/common/validation/story';
-import { StoryLocalStorageService } from '@/services/story';
+import { createStorySchema, PRIORITIES, STORY_STATUSES, storySchema } from '@/common/validation/story';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export const CreateStoryForm = ({ onSuccess, projectId }: { onSuccess: () => void; projectId: string }) => {
-	const { toast } = useToast();
-	const refreshStories = useSetAtom(refreshStoriesAtom);
+type CreateStoryForm = {
+	variant: 'create';
+	projectId: string;
+	onSubmit: (values: z.infer<typeof createStorySchema>) => Promise<void>;
+	isSubmitting?: boolean;
+};
 
-	const form = useForm<z.infer<typeof storySchema>>({
-		resolver: zodResolver(storySchema),
-		defaultValues: {
-			name: '',
-			description: '',
-			status: 'todo',
-			priority: 'medium',
-			userId: '',
-			projectId,
-		},
+type UpdateStoryForm = {
+	variant: 'update';
+	onSubmit: (values: z.infer<typeof storySchema>) => Promise<void>;
+	story: z.infer<typeof storySchema>;
+	isSubmitting?: boolean;
+};
+
+type StoryFormProps = CreateStoryForm | UpdateStoryForm;
+
+export const StoryForm = (props: StoryFormProps) => {
+	const form = useForm({
+		resolver: zodResolver(props.variant === 'create' ? createStorySchema : storySchema),
+		defaultValues:
+			props.variant === 'create'
+				? {
+						name: '',
+						description: '',
+						status: STORY_STATUSES[0],
+						priority: PRIORITIES[0],
+						projectId: props.projectId,
+						userId: 'dominik',
+				  }
+				: props.story,
 	});
-
-	const handleCreateStory = (story: z.infer<typeof storySchema>) => {
-		console.log(story);
-
-		const storyService = new StoryLocalStorageService();
-		const createdStory = storyService.create(story);
-
-		toast({
-			title: 'Story created',
-			description: (
-				<p>
-					Sucessfully created <span className='font-medium'>{createdStory.name}</span> story
-				</p>
-			),
-		});
-
-		form.reset();
-		refreshStories();
-		onSuccess();
-	};
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(handleCreateStory)} className='space-y-8'>
+			<form
+				onSubmit={form.handleSubmit((data) => {
+					if (props.variant === 'create') {
+						props.onSubmit(data as z.infer<typeof createStorySchema>);
+						return;
+					}
+
+					props.onSubmit(data as z.infer<typeof storySchema>);
+				})}
+				className='space-y-8'
+			>
 				<FormField
 					control={form.control}
 					name='name'
@@ -133,7 +135,9 @@ export const CreateStoryForm = ({ onSuccess, projectId }: { onSuccess: () => voi
 				/>
 
 				<DialogFooter>
-					<Button type='submit'>Create</Button>
+					<Button disabled={props.isSubmitting} type='submit'>
+						{props.isSubmitting ? 'Submitting' : 'Submit'}
+					</Button>
 				</DialogFooter>
 			</form>
 		</Form>

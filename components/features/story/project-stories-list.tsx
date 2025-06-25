@@ -1,24 +1,27 @@
 'use client';
 
-import { storiesAtom } from '@/stores/story/stories-store';
-import { StoryStatus } from '@/types/story';
 import { StoryCard } from './story-card';
-import { useAtomValue } from 'jotai';
 import { CircleCheck, CircleDot, Loader } from 'lucide-react';
+import { STORY_STATUSES } from '@/common/validation/story';
+import { useProjectStories } from '@/hooks/story/useProjectStories';
 
 export const ProjectStoriesList = ({ projectId }: { projectId: string }) => {
-	const stories = useAtomValue(storiesAtom);
+	const { data: stories } = useProjectStories({
+		projectId,
+	});
 
-	const filteredStories = stories.filter((s) => s.projectId === projectId);
+	if (!stories) {
+		return null;
+	}
 
 	return (
 		<ul className='flex flex-1 w-max overflow-x-auto space-x-4'>
-			{Object.values(StoryStatus).map((storyVariant) => (
+			{STORY_STATUSES.map((storyVariant) => (
 				<li className='shrink-0 p-4 space-y-4 rounded-md min-h-full basis-80 border' key={storyVariant}>
 					<div className='flex gap-3 items-center'>
-						{storyVariant === StoryStatus.Todo ? (
+						{storyVariant === 'todo' ? (
 							<CircleDot className='text-purple-600' size={16} />
-						) : storyVariant === StoryStatus.Doing ? (
+						) : storyVariant === 'doing' ? (
 							<Loader className='text-orange-600' size={16} />
 						) : (
 							<CircleCheck className='text-green-600' size={16} />
@@ -32,7 +35,7 @@ export const ProjectStoriesList = ({ projectId }: { projectId: string }) => {
 
 					<div>
 						<ul className='space-y-2'>
-							{filteredStories
+							{stories
 								.filter((story) => story.status === storyVariant)
 								.map((story) => (
 									<li key={story.id}>
