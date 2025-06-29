@@ -1,6 +1,6 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
-import { selectedProjectStore } from '@/stores/project/selected-project-store';
+import { currentProjectActionStore, selectedProjectStore } from '@/stores/project/project-store';
 import { Ellipsis, PanelsTopLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Project } from '@/types/project';
@@ -8,6 +8,7 @@ import { useSetAtom } from 'jotai';
 
 export const ProjectCard = ({ project }: { project: Project }) => {
 	const setSelectedProject = useSetAtom(selectedProjectStore);
+	const setCurrentAction = useSetAtom(currentProjectActionStore);
 
 	return (
 		<Card className='p-4'>
@@ -41,7 +42,8 @@ export const ProjectCard = ({ project }: { project: Project }) => {
 								variant='ghost'
 								onClick={(e) => {
 									e.stopPropagation();
-									setSelectedProject({ action: 'update', project });
+									setSelectedProject(project);
+									setCurrentAction('update');
 								}}
 							>
 								Update
@@ -54,7 +56,8 @@ export const ProjectCard = ({ project }: { project: Project }) => {
 								variant='ghost'
 								onClick={(e) => {
 									e.stopPropagation();
-									setSelectedProject({ action: 'delete', project });
+									setSelectedProject(project);
+									setCurrentAction('delete');
 								}}
 							>
 								Delete
