@@ -1,5 +1,5 @@
 import type { Task } from '@/types/task';
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where, type DocumentData, type DocumentSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { taskCreateSchema, taskSchema } from '@/common/validation/task';
 
@@ -15,7 +15,7 @@ interface ITaskService {
 }
 
 export class TaskFirebaseService implements ITaskService {
-	private readonly COLLECTION_NAME = 'stories';
+	private readonly COLLECTION_NAME = 'tasks';
 
 	// DONE
 	public async getAll(): Promise<Task[]> {
@@ -24,9 +24,7 @@ export class TaskFirebaseService implements ITaskService {
 		const tasks: Task[] = [];
 
 		for (const docSnap of querySnapshot.docs) {
-			const data = { id: docSnap.id, ...docSnap.data() };
-
-			const parseResult = taskSchema.safeParse(data);
+			const parseResult = this.parseTask(docSnap);
 
 			if (parseResult.success) {
 				tasks.push(parseResult.data);
@@ -48,9 +46,7 @@ export class TaskFirebaseService implements ITaskService {
 		const tasks: Task[] = [];
 
 		for (const docSnap of querySnapshot.docs) {
-			const data = { id: docSnap.id, ...docSnap.data() };
-
-			const parseResult = taskSchema.safeParse(data);
+			const parseResult = this.parseTask(docSnap);
 
 			if (parseResult.success) {
 				tasks.push(parseResult.data);
@@ -69,8 +65,7 @@ export class TaskFirebaseService implements ITaskService {
 
 		if (!docSnap.exists()) return undefined;
 
-		const project = { id: docSnap.id, ...docSnap.data() };
-		const parseResult = taskSchema.safeParse(project);
+		const parseResult = this.parseTask(docSnap);
 
 		if (!parseResult.success) {
 			console.warn(`Task with id ${id} is invalid: ${parseResult.error.format()}`);
@@ -81,7 +76,7 @@ export class TaskFirebaseService implements ITaskService {
 	}
 
 	// DONE
-	public async create(task: Omit<Task, 'id' | 'createdAt'>): Promise<Task> {
+	public async create(task: Omit<Task, 'id'>): Promise<Task> {
 		const parseResult = taskCreateSchema.safeParse(task);
 
 		if (!parseResult.success) {
@@ -102,8 +97,7 @@ export class TaskFirebaseService implements ITaskService {
 			throw new Error(`Task with id ${id} does not exist`);
 		}
 
-		const project = { id: docSnap.id, ...docSnap.data() };
-		const parseResult = taskSchema.safeParse(project);
+		const parseResult = this.parseTask(docSnap);
 
 		if (!parseResult.success) {
 			throw new Error(`Task with id ${id} is invalid: ${parseResult.error.format()}`);
@@ -134,8 +128,7 @@ export class TaskFirebaseService implements ITaskService {
 			throw new Error(`Task with id ${id} does not exist`);
 		}
 
-		const project = { id: docSnap.id, ...docSnap.data() };
-		const parseResult = taskSchema.safeParse(project);
+		const parseResult = this.parseTask(docSnap);
 
 		if (!parseResult.success) {
 			throw new Error(`Task with id ${id} is invalid: ${parseResult.error.format()}`);
@@ -180,9 +173,7 @@ export class TaskFirebaseService implements ITaskService {
 		const docRef = doc(db, this.COLLECTION_NAME, id);
 		const docSnap = await getDoc(docRef);
 
-		const storyToDelete = { id: docSnap.id, ...docSnap.data() };
-
-		const parseResult = taskSchema.safeParse(storyToDelete);
+		const parseResult = this.parseTask(docSnap);
 
 		if (!parseResult.success) {
 			throw new Error(`Task with id ${id} is invalid: ${parseResult.error.format()}`);
@@ -195,5 +186,20 @@ export class TaskFirebaseService implements ITaskService {
 		await deleteDoc(docRef);
 
 		return parseResult.data;
+	}
+
+	private parseTask(docSnap: DocumentSnapshot<DocumentData, DocumentData>) {
+		const rawData = docSnap.data();
+		const task = {
+			id: docSnap.id,
+			...rawData,
+			createdAt: rawData?.createdAt?.toDate?.() ?? new Date(),
+			startedAt: rawData?.startedAt?.toDate?.() ?? null,
+			finishedAt: rawData?.finishedAt?.toDate?.() ?? null,
+		};
+
+		const result = taskSchema.safeParse(task);
+
+		return result;
 	}
 }

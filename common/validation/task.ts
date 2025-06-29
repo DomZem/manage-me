@@ -3,6 +3,7 @@ import { priorityEnumSchema } from './story';
 
 const taskBaseSchema = z.object({
 	name: z.string().trim().min(1, 'Name is required'),
+	createdAt: z.coerce.date().default(() => new Date()),
 	description: z.string().trim().min(1, 'Description is required'),
 	priority: priorityEnumSchema,
 	elapsedTimeToFinish: z.coerce.number().positive(),
