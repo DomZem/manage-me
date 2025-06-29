@@ -1,4 +1,4 @@
-import { selectedStoryStore } from '@/stores/story/selected-story-store';
+import { currentStoryActionStore, selectedStoryStore } from '@/stores/story/story-store';
 import { useSetAtom } from 'jotai';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Ellipsis, SquarePen, Trash2 } from 'lucide-react';
@@ -7,6 +7,7 @@ import type { Story } from '@/types/story';
 
 export const StoryCardOptions = ({ story }: { story: Story }) => {
 	const setSelectedStory = useSetAtom(selectedStoryStore);
+	const setCurrentAction = useSetAtom(currentStoryActionStore);
 
 	return (
 		<DropdownMenu>
@@ -28,7 +29,8 @@ export const StoryCardOptions = ({ story }: { story: Story }) => {
 						variant='ghost'
 						onClick={(e) => {
 							e.stopPropagation();
-							setSelectedStory({ action: 'update', story });
+							setSelectedStory(story);
+							setCurrentAction('update');
 						}}
 					>
 						<SquarePen />
@@ -41,7 +43,8 @@ export const StoryCardOptions = ({ story }: { story: Story }) => {
 						variant='ghost'
 						onClick={(e) => {
 							e.stopPropagation();
-							setSelectedStory({ action: 'delete', story });
+							setSelectedStory(story);
+							setCurrentAction('delete');
 						}}
 					>
 						<Trash2 />

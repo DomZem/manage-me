@@ -1,6 +1,6 @@
 'use client';
 
-import { selectedStoryStore } from '@/stores/story/selected-story-store';
+import { currentStoryActionStore, selectedStoryStore } from '@/stores/story/story-store';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useAtom } from 'jotai';
 import { useDeleteStory } from '@/hooks/story/useDeleteStory';
@@ -8,21 +8,22 @@ import type { Story } from '@/types/story';
 
 export const DeleteStoryModal = () => {
 	const [selectedStory, setSelectedStory] = useAtom(selectedStoryStore);
+	const [currentAction, setCurrentAction] = useAtom(currentStoryActionStore);
 
 	const handleClose = () => {
-		setSelectedStory(null);
+		setCurrentAction(null);
 	};
 
 	return (
-		<AlertDialog open={selectedStory?.action === 'delete'} onOpenChange={handleClose}>
-			<AlertDialogContent>
+		<AlertDialog open={currentAction === 'delete'} onOpenChange={handleClose}>
+			<AlertDialogContent onCloseAutoFocus={() => setSelectedStory(null)}>
 				<AlertDialogHeader>
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>This action cannot be undone. This will permanently delete your account and remove your data from our servers.</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={handleClose}>Cancel</AlertDialogCancel>
-					{selectedStory?.story && <DeleteButton story={selectedStory.story} />}
+					{selectedStory && <DeleteButton story={selectedStory} />}
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

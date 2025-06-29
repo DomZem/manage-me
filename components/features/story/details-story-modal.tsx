@@ -1,39 +1,34 @@
 'use client';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { selectedStoryStore } from '@/stores/story/selected-story-store';
+import { currentStoryActionStore, selectedStoryStore } from '@/stores/story/story-store';
 import { useAtom } from 'jotai';
 import { TasksList } from '../task/tasks-list';
-import { CreateTaskModal } from '../task/create-task-modal';
+import { CreateTaskForm } from '../task/create-task-form';
 
 export const DetailsStoryModal = () => {
 	const [selectedStory, setSelectedStory] = useAtom(selectedStoryStore);
+	const [currentAction, setCurrentAction] = useAtom(currentStoryActionStore);
 
 	const handleClose = () => {
-		setSelectedStory(null);
+		setCurrentAction(null);
 	};
 
 	return (
-		<Dialog open={selectedStory?.action === 'details'} onOpenChange={handleClose}>
-			<DialogContent>
+		<Dialog open={currentAction === 'details'} onOpenChange={handleClose}>
+			<DialogContent className='max-w-3xl' onCloseAutoFocus={() => setSelectedStory(null)}>
 				<DialogHeader>
 					<DialogTitle>
-						{selectedStory?.story ? (
-							<>
-								Details of <span className='font-semibold'>{selectedStory.story.name}</span> story
-							</>
-						) : (
-							'Story Details'
-						)}
+						Details of <span className='font-semibold'>{selectedStory?.name}</span> story
 					</DialogTitle>
-					<DialogDescription>{selectedStory?.story ? selectedStory.story.description : 'Here you can see the details of the story and its tasks.'}</DialogDescription>
+					<DialogDescription>{selectedStory?.description}</DialogDescription>
 				</DialogHeader>
 
-				{selectedStory?.story && (
-					<>
-						<TasksList storyId={selectedStory.story.id} />
-						<CreateTaskModal storyId={selectedStory.story.id} />
-					</>
+				{selectedStory && (
+					<div className='flex gap-4'>
+						<TasksList storyId={selectedStory.id} />
+						<CreateTaskForm storyId={selectedStory.id} />
+					</div>
 				)}
 			</DialogContent>
 		</Dialog>
