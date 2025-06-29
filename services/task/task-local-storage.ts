@@ -1,8 +1,6 @@
-import type { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
-import { taskSchema } from '@/common/validation/task';
-
-type Task = z.infer<typeof taskSchema>;
+import { taskCreateSchema } from '@/common/validation/task';
+import type { Task } from '@/types/task';
 
 interface TaskService {
 	getAll(): Task[];
@@ -25,7 +23,7 @@ export class TaskLocalStorageService implements TaskService {
 
 		try {
 			const tasks: unknown[] = JSON.parse(data);
-			return tasks.map((t) => taskSchema.parse(t));
+			return tasks.map((t) => taskCreateSchema.parse(t));
 		} catch (e) {
 			console.error('Error parsing tasks from localStorage:', e);
 
@@ -44,7 +42,7 @@ export class TaskLocalStorageService implements TaskService {
 	public create(task: Omit<Task, 'id' | 'createdAt'>): Task {
 		const tasks = this.getAll();
 
-		const newTask: Task = taskSchema.parse({
+		const newTask: Task = taskCreateSchema.parse({
 			...task,
 			id: uuidv4(),
 			createdAt: new Date(),
@@ -59,10 +57,9 @@ export class TaskLocalStorageService implements TaskService {
 		const taskToUpdate = tasks.find((t) => t.id === id);
 		if (!taskToUpdate) return undefined;
 
-		const updatedTask: Task = taskSchema.parse({
+		const updatedTask: Task = taskCreateSchema.parse({
 			...task,
 			id,
-			createdAt: taskToUpdate.createdAt, // preserve createdAt
 		});
 		const updatedTasks = tasks.map((t) => (t.id === id ? updatedTask : t));
 		localStorage.setItem(this.localStorageKey, JSON.stringify(updatedTasks));
@@ -81,7 +78,7 @@ export class TaskLocalStorageService implements TaskService {
 			throw new Error('Task must be in "todo" status to assign a user');
 		}
 
-		const updatedTask: Task = taskSchema.parse({
+		const updatedTask: Task = taskCreateSchema.parse({
 			...taskToUpdate,
 			status: 'doing',
 			userId,
@@ -105,7 +102,7 @@ export class TaskLocalStorageService implements TaskService {
 			throw new Error('Task must be in "doing" status to be marked as done');
 		}
 
-		const updatedTask: Task = taskSchema.parse({
+		const updatedTask: Task = taskCreateSchema.parse({
 			...taskToUpdate,
 			status: 'done',
 			finishedAt: new Date(),
