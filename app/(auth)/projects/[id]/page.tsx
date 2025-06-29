@@ -4,6 +4,7 @@ import { DeleteStoryModal } from '@/components/features/story/delete-story-modal
 import { ProjectHeader } from '@/components/features/project/project-header';
 import { DetailsStoryModal } from '@/components/features/story/details-story-modal';
 import { DeleteTaskModal } from '@/components/features/task/delete-task-modal';
+import { UpdateTaskModal } from '@/components/features/task/update-task-modal';
 
 export default async function ProjectDetailsPage({
 	params,
@@ -27,6 +28,7 @@ export default async function ProjectDetailsPage({
 			<DetailsStoryModal />
 
 			<DeleteTaskModal />
+			<UpdateTaskModal />
 		</div>
 	);
 }

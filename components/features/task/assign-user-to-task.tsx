@@ -9,24 +9,20 @@ import { UserLocalStorageService } from '@/services/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { User } from '@/types/user';
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { TaskLocalStorageService } from '@/services/task';
-import { refreshTasksAtom } from '@/stores/task/tasks-store';
-import { useSetAtom } from 'jotai';
+import { useAssignUserToTask } from '@/hooks/task/useAssignUserToTask';
 
 const userService = new UserLocalStorageService();
 
-export const AssignUserToTask = ({ taskId }: { taskId: string }) => {
-	const { toast } = useToast();
-
-	const refreshTasks = useSetAtom(refreshTasksAtom);
-
+export const AssignUserToTask = ({ storyId, taskId }: { storyId: string; taskId: string }) => {
 	const [open, setOpen] = useState(false);
 	const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
 	const users = userService.getAll();
+	const assignUser = useAssignUserToTask({
+		storyId,
+	});
 
-	const handleSelectUser = (userId: string) => {
+	const handleSelectUser = async (userId: string) => {
 		const user = users.find((u) => u.id === userId);
 
 		if (!user) return;
@@ -34,34 +30,10 @@ export const AssignUserToTask = ({ taskId }: { taskId: string }) => {
 		setSelectedUser(user);
 		setOpen(false);
 
-		const taskService = new TaskLocalStorageService();
-
-		const task = taskService.assignUserToTask(taskId, user.id);
-
-		if (!task) {
-			toast({
-				title: 'Error',
-				description: 'Failed to assign user to the task.',
-				variant: 'destructive',
-			});
-
-			return;
-		}
-
-		toast({
-			title: 'User assigned',
-			description: (
-				<p>
-					Sucessfully assigned{' '}
-					<span className='font-medium'>
-						{user.firstName} {user.lastName}
-					</span>{' '}
-					to the task
-				</p>
-			),
+		await assignUser.mutateAsync({
+			taskId,
+			userId,
 		});
-
-		refreshTasks();
 	};
 
 	return (

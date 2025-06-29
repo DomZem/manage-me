@@ -27,7 +27,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
 						<span>
 							Priority: <strong className='capitalize'>{task.priority}</strong>
 						</span>
-						<span>Created: {task.createdAt.toLocaleDateString()}</span>
+						{/* <span>Created: {task.createdAt.toLocaleDateString()}</span> */}
 						{'startedAt' in task && <span>Started: {task.startedAt.toLocaleDateString()}</span>}
 						{'finishedAt' in task && <span>Finished: {task.finishedAt.toLocaleDateString()}</span>}
 						<span>ETA: {task.elapsedTimeToFinish}h</span>
@@ -36,7 +36,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
 
 				<div className='inline-flex items-center gap-2'>
 					{task.status === 'todo' ? (
-						<AssignUserToTask taskId={task.id} />
+						<AssignUserToTask taskId={task.id} storyId={task.storyId} />
 					) : (
 						<Avatar className='size-9'>
 							<AvatarImage src='https://github.com/shadcn.png' />

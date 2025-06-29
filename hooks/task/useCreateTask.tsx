@@ -5,7 +5,7 @@ import { TaskFirebaseService } from '@/services/task/task-firebase';
 import { useStoryTasks } from './useStoryTasks';
 import type { taskCreateSchema } from '@/common/validation/task';
 
-export const useCreateTask = ({ storyId, onSuccess }: { storyId: string; onSuccess?: () => void }) => {
+export const useCreateTask = ({ storyId }: { storyId: string }) => {
 	const { toast } = useToast();
 	const { refetch: refetchStories } = useStoryTasks({ storyId, enabled: false });
 
@@ -26,7 +26,6 @@ export const useCreateTask = ({ storyId, onSuccess }: { storyId: string; onSucce
 			});
 
 			refetchStories();
-			onSuccess?.();
 		},
 		onError: (error) => {
 			toast({

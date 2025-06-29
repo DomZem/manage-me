@@ -1,64 +1,49 @@
 'use client';
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { useToast } from '@/hooks/use-toast';
-import { useAtom, useSetAtom } from 'jotai';
-import { refreshTasksAtom } from '@/stores/task/tasks-store';
-import { selectedTaskStore } from '@/stores/task/selected-task-store';
-import { TaskLocalStorageService } from '@/services/task';
+import { useAtom } from 'jotai';
+import { currentTaskActionStore, selectedTaskStore } from '@/stores/task/task-store';
+import type { Task } from '@/types/task';
+import { useDeleteTask } from '@/hooks/task/useDeleteTask';
 
 export const DeleteTaskModal = () => {
 	const [selectedTask, setSelectedTask] = useAtom(selectedTaskStore);
-	const refreshTasks = useSetAtom(refreshTasksAtom);
-
-	const { toast } = useToast();
+	const [currentAction, setCurrentAction] = useAtom(currentTaskActionStore);
 
 	const handleClose = () => {
-		setSelectedTask(null);
-	};
-
-	const handleDelete = () => {
-		const taskService = new TaskLocalStorageService();
-		const deletetdTask = taskService.delete(selectedTask!.task.id);
-
-		if (deletetdTask) {
-			refreshTasks();
-
-			toast({
-				title: 'Task deleted',
-				description: (
-					<p>
-						Sucessfull deleted <span className='font-medium'>{deletetdTask!.name}</span> task
-					</p>
-				),
-			});
-
-			return;
-		}
-
-		toast({
-			title: 'Task not found',
-			description: (
-				<p>
-					Task <span className='font-medium'>{selectedTask!.task.name}</span> not found
-				</p>
-			),
-			variant: 'destructive',
-		});
+		setCurrentAction(null);
 	};
 
 	return (
-		<AlertDialog open={selectedTask?.action === 'delete'} onOpenChange={handleClose}>
-			<AlertDialogContent>
+		<AlertDialog open={currentAction === 'delete'} onOpenChange={handleClose}>
+			<AlertDialogContent onCloseAutoFocus={() => setSelectedTask(null)}>
 				<AlertDialogHeader>
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>This action cannot be undone. This will permanently delete your account and remove your data from our servers.</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel onClick={handleClose}>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+					<AlertDialogCancel type='button' onClick={handleClose}>
+						Cancel
+					</AlertDialogCancel>
+					{selectedTask && <DeleteButton task={selectedTask} />}
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>
+	);
+};
+
+const DeleteButton = ({ task }: { task: Task }) => {
+	const deleteTask = useDeleteTask({
+		storyId: task.storyId,
+	});
+
+	const handleDelete = async () => {
+		await deleteTask.mutateAsync(task.id);
+	};
+
+	return (
+		<AlertDialogAction type='button' disabled={deleteTask.isPending} onClick={handleDelete}>
+			Delete
+		</AlertDialogAction>
 	);
 };
