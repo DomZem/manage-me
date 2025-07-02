@@ -6,7 +6,8 @@ export const useProjectStories = ({ projectId, enabled = true }: { projectId: st
 		queryKey: ['projectStories', projectId],
 		queryFn: async () => {
 			const service = new StoryFirebaseService();
-			return await service.getAllByProjectId(projectId);
+			const stories = await service.getAllByProjectId(projectId);
+			return stories;
 		},
 		enabled,
 	});

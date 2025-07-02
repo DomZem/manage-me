@@ -6,7 +6,8 @@ export const useProjects = ({ enabled = true }: { enabled?: boolean }) => {
 		queryKey: ['projects'],
 		queryFn: async () => {
 			const service = new ProjectFirebaseService();
-			return await service.getAll();
+			const projects = await service.getAll();
+			return projects;
 		},
 		enabled,
 	});

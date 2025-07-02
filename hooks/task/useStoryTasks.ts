@@ -6,7 +6,8 @@ export const useStoryTasks = ({ storyId, enabled = true }: { storyId: string; en
 		queryKey: ['storyTasks', storyId],
 		queryFn: async () => {
 			const service = new TaskFirebaseService();
-			return await service.getAllByStoryId(storyId);
+			const tasks = await service.getAllByStoryId(storyId);
+			return tasks;
 		},
 		enabled,
 	});
