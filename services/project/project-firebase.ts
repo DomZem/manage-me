@@ -12,11 +12,11 @@ export interface IProjectService {
 }
 
 export class ProjectFirebaseService implements IProjectService {
-	private readonly COLLECTION_NAME = 'projects';
+	private readonly collectionName = 'projects';
 
 	// DONE
 	public async getAll(): Promise<Project[]> {
-		const querySnapshot = await getDocs(collection(db, this.COLLECTION_NAME));
+		const querySnapshot = await getDocs(collection(db, this.collectionName));
 
 		const projects: Project[] = [];
 
@@ -36,7 +36,7 @@ export class ProjectFirebaseService implements IProjectService {
 	}
 
 	public async getOne(id: string): Promise<Project | undefined> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) return undefined;
@@ -60,7 +60,7 @@ export class ProjectFirebaseService implements IProjectService {
 			throw new Error(`Project is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = await addDoc(collection(db, this.COLLECTION_NAME), parseResult.data);
+		const docRef = await addDoc(collection(db, this.collectionName), parseResult.data);
 
 		return { id: docRef.id, ...parseResult.data };
 	}
@@ -73,7 +73,7 @@ export class ProjectFirebaseService implements IProjectService {
 			throw new Error(`Project is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = doc(db, this.COLLECTION_NAME, parseResult.data.id);
+		const docRef = doc(db, this.collectionName, parseResult.data.id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
@@ -86,7 +86,7 @@ export class ProjectFirebaseService implements IProjectService {
 
 	// DONE
 	public async delete(id: string): Promise<Project> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		const projectToDelete = { id: docSnap.id, ...docSnap.data() };

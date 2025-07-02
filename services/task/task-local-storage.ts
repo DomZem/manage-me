@@ -1,21 +1,22 @@
 import { v4 as uuidv4 } from 'uuid';
-import { taskCreateSchema } from '@/common/validation/task';
+import { taskCreateSchema, taskSchema } from '@/common/validation/task';
 import type { Task } from '@/types/task';
 
-interface TaskService {
+interface ITaskService {
 	getAll(): Task[];
 	getAllByStoryId(storyId: string): Task[];
 	getOne(id: string): Task | undefined;
 	create(task: Omit<Task, 'id' | 'createdAt'>): Task;
-	assignUserToTask(taskId: string, userId: string): Task;
-	markAsDone(taskId: string): Task;
-	update(id: string, task: Omit<Task, 'id' | 'createdAt'>): Task | undefined;
-	delete(id: string): Task | undefined;
+	assignUserToTask(id: string, userId: string): Task;
+	markAsDone(id: string): Task;
+	update(updatedTask: Task): Task;
+	delete(id: string): Task;
 }
 
-export class TaskLocalStorageService implements TaskService {
+export class TaskLocalStorageService implements ITaskService {
 	private readonly localStorageKey = 'tasks';
 
+	// DONE
 	public getAll(): Task[] {
 		const data = localStorage.getItem(this.localStorageKey);
 
@@ -23,101 +24,148 @@ export class TaskLocalStorageService implements TaskService {
 
 		try {
 			const tasks: unknown[] = JSON.parse(data);
-			return tasks.map((t) => taskCreateSchema.parse(t));
+			const parsedTasks: Task[] = [];
+
+			for (const task of tasks) {
+				const parseResult = taskSchema.safeParse(task);
+
+				if (!parseResult.success) {
+					console.warn(`Skipping invalid task: ${parseResult.error.format()}`);
+					continue;
+				}
+
+				parsedTasks.push(parseResult.data);
+			}
+
+			return parsedTasks;
 		} catch (e) {
 			console.error('Error parsing tasks from localStorage:', e);
-
 			return [];
 		}
 	}
 
+	// DONE
 	public getAllByStoryId(storyId: string): Task[] {
 		return this.getAll().filter((task) => task.storyId === storyId);
 	}
 
+	// DONE
 	public getOne(id: string): Task | undefined {
-		return this.getAll().find((task) => task.id === id);
+		const task = this.getAll().find((task) => task.id === id);
+
+		if (!task) {
+			console.warn(`Task with id ${id} not found`);
+			return undefined;
+		}
+
+		const parseResult = taskSchema.safeParse(task);
+
+		if (!parseResult.success) {
+			throw new Error(`Task is invalid: ${parseResult.error.format()}`);
+		}
+
+		return parseResult.data;
 	}
 
+	// DONE
 	public create(task: Omit<Task, 'id' | 'createdAt'>): Task {
+		const parseResult = taskCreateSchema.safeParse(task);
+
+		if (!parseResult.success) {
+			throw new Error(`Task is invalid: ${parseResult.error.format()}`);
+		}
+
 		const tasks = this.getAll();
 
-		const newTask: Task = taskCreateSchema.parse({
-			...task,
+		const newTask: Task = {
+			...parseResult.data,
 			id: uuidv4(),
 			createdAt: new Date(),
-		});
-		localStorage.setItem(this.localStorageKey, JSON.stringify([...tasks, newTask]));
+		};
+		localStorage.setItem(this.localStorageKey, JSON.stringify([tasks, newTask]));
 
 		return newTask;
 	}
 
-	public update(id: string, task: Omit<Task, 'id' | 'createdAt'>): Task | undefined {
-		const tasks = this.getAll();
-		const taskToUpdate = tasks.find((t) => t.id === id);
-		if (!taskToUpdate) return undefined;
+	public update(updatedTask: Task): Task {
+		const parseResult = taskSchema.safeParse(updatedTask);
 
-		const updatedTask: Task = taskCreateSchema.parse({
-			...task,
-			id,
-		});
-		const updatedTasks = tasks.map((t) => (t.id === id ? updatedTask : t));
+		if (!parseResult.success) {
+			throw new Error(`Task is invalid: ${parseResult.error.format()}`);
+		}
+
+		const taskToUpdate = this.getOne(updatedTask.id);
+
+		if (!taskToUpdate) {
+			throw new Error(`Task with id ${updatedTask.id} does not exist`);
+		}
+
+		const updatedTasks = this.getAll().map((task) => (task.id === updatedTask.id ? updatedTask : task));
 		localStorage.setItem(this.localStorageKey, JSON.stringify(updatedTasks));
+
 		return updatedTask;
 	}
 
-	public assignUserToTask(taskId: string, userId: string): Task {
-		const tasks = this.getAll();
-		const taskToUpdate = tasks.find((t) => t.id === taskId);
+	// DONE
+	public assignUserToTask(id: string, userId: string): Task {
+		const taskToUpdate = this.getOne(id);
 
 		if (!taskToUpdate) {
-			throw new Error(`Task with id ${taskId} not found`);
+			throw new Error(`Task with id ${id} does not exist`);
 		}
 
 		if (taskToUpdate.status !== 'todo') {
-			throw new Error('Task must be in "todo" status to assign a user');
+			throw new Error(`Task with id ${id} is not in 'todo' status`);
 		}
 
-		const updatedTask: Task = taskCreateSchema.parse({
+		const updatedTask: Task = {
 			...taskToUpdate,
 			status: 'doing',
 			userId,
 			startedAt: new Date(),
-		});
+		};
 
-		const updatedTasks = tasks.map((task) => (task.id === taskId ? updatedTask : task));
+		const updatedTasks = this.getAll().map((task) => (task.id === updatedTask.id ? updatedTask : task));
 		localStorage.setItem(this.localStorageKey, JSON.stringify(updatedTasks));
+
 		return updatedTask;
 	}
 
-	public markAsDone(taskId: string): Task {
-		const tasks = this.getAll();
-		const taskToUpdate = tasks.find((t) => t.id === taskId);
+	// DONE
+	public markAsDone(id: string): Task {
+		const taskToUpdate = this.getOne(id);
 
 		if (!taskToUpdate) {
-			throw new Error(`Task with id ${taskId} not found`);
+			throw new Error(`Task with id ${id} does not exist`);
 		}
 
 		if (taskToUpdate.status !== 'doing') {
-			throw new Error('Task must be in "doing" status to be marked as done');
+			throw new Error(`Task with id ${id} is not in 'doing' status`);
 		}
 
-		const updatedTask: Task = taskCreateSchema.parse({
+		const updatedTask: Task = {
 			...taskToUpdate,
 			status: 'done',
 			finishedAt: new Date(),
-		});
+		};
 
-		const updatedTasks = tasks.map((task) => (task.id === taskId ? updatedTask : task));
+		const updatedTasks = this.getAll().map((task) => (task.id === updatedTask.id ? updatedTask : task));
 		localStorage.setItem(this.localStorageKey, JSON.stringify(updatedTasks));
+
 		return updatedTask;
 	}
 
-	public delete(id: string): Task | undefined {
-		const tasks = this.getAll();
-		const taskToDelete = tasks.find((t) => t.id === id);
-		const updatedTasks = tasks.filter((t) => t.id !== id);
+	// DONE
+	public delete(id: string): Task {
+		const taskToDelete = this.getOne(id);
+
+		if (!taskToDelete) {
+			throw new Error(`Task with id ${id} does not exist`);
+		}
+
+		const updatedTasks = this.getAll().filter((task) => task.id !== id);
 		localStorage.setItem(this.localStorageKey, JSON.stringify(updatedTasks));
+
 		return taskToDelete;
 	}
 }

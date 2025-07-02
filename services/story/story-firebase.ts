@@ -13,11 +13,11 @@ interface IStoryService {
 }
 
 export class StoryFirebaseService implements IStoryService {
-	private readonly COLLECTION_NAME = 'stories';
+	private readonly collectionName = 'stories';
 
 	// DONE
 	public async getAll(): Promise<Story[]> {
-		const querySnapshot = await getDocs(collection(db, this.COLLECTION_NAME));
+		const querySnapshot = await getDocs(collection(db, this.collectionName));
 
 		const stories: Story[] = [];
 
@@ -36,8 +36,9 @@ export class StoryFirebaseService implements IStoryService {
 		return stories;
 	}
 
+	// DONE
 	public async getAllByProjectId(projectId: string): Promise<Story[]> {
-		const storiesRef = collection(db, this.COLLECTION_NAME);
+		const storiesRef = collection(db, this.collectionName);
 
 		const q = query(storiesRef, where('projectId', '==', projectId));
 		const querySnapshot = await getDocs(q);
@@ -61,7 +62,7 @@ export class StoryFirebaseService implements IStoryService {
 
 	// DONE
 	public async getOne(id: string): Promise<Story | undefined> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) return undefined;
@@ -85,7 +86,7 @@ export class StoryFirebaseService implements IStoryService {
 			throw new Error(`Story is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = await addDoc(collection(db, this.COLLECTION_NAME), parseResult.data);
+		const docRef = await addDoc(collection(db, this.collectionName), parseResult.data);
 
 		return { id: docRef.id, ...parseResult.data };
 	}
@@ -98,7 +99,7 @@ export class StoryFirebaseService implements IStoryService {
 			throw new Error(`Story is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = doc(db, this.COLLECTION_NAME, parseResult.data.id);
+		const docRef = doc(db, this.collectionName, parseResult.data.id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
@@ -111,7 +112,7 @@ export class StoryFirebaseService implements IStoryService {
 
 	// DONE
 	public async delete(id: string): Promise<Story> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		const storyToDelete = { id: docSnap.id, ...docSnap.data() };

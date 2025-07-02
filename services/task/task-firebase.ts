@@ -15,11 +15,11 @@ interface ITaskService {
 }
 
 export class TaskFirebaseService implements ITaskService {
-	private readonly COLLECTION_NAME = 'tasks';
+	private readonly collectionName = 'tasks';
 
 	// DONE
 	public async getAll(): Promise<Task[]> {
-		const querySnapshot = await getDocs(collection(db, this.COLLECTION_NAME));
+		const querySnapshot = await getDocs(collection(db, this.collectionName));
 
 		const tasks: Task[] = [];
 
@@ -38,7 +38,7 @@ export class TaskFirebaseService implements ITaskService {
 
 	// DONE
 	public async getAllByStoryId(storyId: string): Promise<Task[]> {
-		const tasksRef = collection(db, this.COLLECTION_NAME);
+		const tasksRef = collection(db, this.collectionName);
 
 		const q = query(tasksRef, where('storyId', '==', storyId));
 		const querySnapshot = await getDocs(q);
@@ -60,7 +60,7 @@ export class TaskFirebaseService implements ITaskService {
 
 	// DONE
 	public async getOne(id: string): Promise<Task | undefined> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) return undefined;
@@ -83,14 +83,14 @@ export class TaskFirebaseService implements ITaskService {
 			throw new Error(`Task is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = await addDoc(collection(db, this.COLLECTION_NAME), parseResult.data);
+		const docRef = await addDoc(collection(db, this.collectionName), parseResult.data);
 
 		return { id: docRef.id, ...parseResult.data };
 	}
 
 	// DONE
 	public async assignUserToTask(id: string, userId: string): Promise<Task> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
@@ -121,7 +121,7 @@ export class TaskFirebaseService implements ITaskService {
 
 	// DONE
 	public async markAsDone(id: string): Promise<Task> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
@@ -154,10 +154,10 @@ export class TaskFirebaseService implements ITaskService {
 		const parseResult = taskSchema.safeParse(updatedTask);
 
 		if (!parseResult.success) {
-			throw new Error(`Story is invalid: ${parseResult.error.format()}`);
+			throw new Error(`Task is invalid: ${parseResult.error.format()}`);
 		}
 
-		const docRef = doc(db, this.COLLECTION_NAME, parseResult.data.id);
+		const docRef = doc(db, this.collectionName, parseResult.data.id);
 		const docSnap = await getDoc(docRef);
 
 		if (!docSnap.exists()) {
@@ -170,7 +170,7 @@ export class TaskFirebaseService implements ITaskService {
 
 	// DONE
 	public async delete(id: string): Promise<Task> {
-		const docRef = doc(db, this.COLLECTION_NAME, id);
+		const docRef = doc(db, this.collectionName, id);
 		const docSnap = await getDoc(docRef);
 
 		const parseResult = this.parseTask(docSnap);
