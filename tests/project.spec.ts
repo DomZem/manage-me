@@ -8,8 +8,8 @@ async function createProject(page: Page, name: string, description: string) {
 	await expect(page.getByText('Create new project')).toBeVisible();
 
 	// Fill the form fields
-	await page.getByPlaceholder('shadcn').fill(name);
-	await page.getByPlaceholder('Tell us a little bit about yourself').fill(description);
+	await page.getByPlaceholder('Enter project name').fill(name);
+	await page.getByPlaceholder('Describe project in few words').fill(description);
 
 	// Submit the form
 	await page.getByRole('button', { name: 'Submit' }).click();
@@ -86,8 +86,8 @@ test.describe('Projects Page', () => {
 		await expect(page.getByText('Name must be at least 2 characters')).toBeVisible();
 		await expect(page.getByText('Description must be at least 2 characters')).toBeVisible();
 
-		await page.getByPlaceholder('shadcn').fill('A');
-		await page.getByPlaceholder('Tell us a little bit about yourself').fill('B');
+		await page.getByPlaceholder('Enter project name').fill('A');
+		await page.getByPlaceholder('Describe project in few words').fill('B');
 		await page.getByRole('button', { name: 'Submit' }).click();
 
 		await expect(page.getByText('Name must be at least 2 characters')).toBeVisible();
@@ -112,8 +112,8 @@ test.describe('Projects Page', () => {
 		await expect(page.getByText('Update project')).toBeVisible();
 
 		// Update the fields
-		await page.getByPlaceholder('shadcn').fill(updatedName);
-		await page.getByPlaceholder('Tell us a little bit about yourself').fill(updatedDescription);
+		await page.getByPlaceholder('Enter project name').fill(updatedName);
+		await page.getByPlaceholder('Describe project in few words').fill(updatedDescription);
 
 		// Submit the form
 		await page.getByRole('button', { name: 'Submit' }).click();

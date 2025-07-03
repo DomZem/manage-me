@@ -61,7 +61,7 @@ export const ProjectForm = (props: ProjectFormProps) => {
 						<FormItem>
 							<FormLabel>Name</FormLabel>
 							<FormControl>
-								<Input placeholder='shadcn' {...field} />
+								<Input placeholder='Enter project name' {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -75,7 +75,7 @@ export const ProjectForm = (props: ProjectFormProps) => {
 						<FormItem>
 							<FormLabel>Description</FormLabel>
 							<FormControl>
-								<Textarea placeholder='Tell us a little bit about yourself' className='resize-none' {...field} />
+								<Textarea placeholder='Describe project in few words' className='resize-none' {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
