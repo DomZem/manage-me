@@ -1,3 +1,4 @@
+import type { User } from '@/types/user';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCurrentUser = () => {
@@ -10,17 +11,14 @@ export const useCurrentUser = () => {
 			});
 
 			if (!res.ok) {
-				if (res.status === 401) {
-					return null; // User not authenticated
-				}
 				const data = await res.json();
 				throw new Error(data.message || 'Failed to get current user');
 			}
 
-			const data = await res.json();
+			const data = (await res.json()) as { user: User };
 			return data.user;
 		},
-		retry: false, // Don't retry on 401 errors
+		retry: false,
 		staleTime: 5 * 60 * 1000, // 5 minutes
 	});
 };
