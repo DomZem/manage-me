@@ -1,9 +1,9 @@
-import { UserLocalStorageService } from '@/services/user';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { NavUser } from '@/components/layout/nav-user';
 import { Separator } from '@/components/ui/separator';
 import { GalleryVerticalEnd } from 'lucide-react';
 import { Menu } from '@/components/layout/menu';
+import { requireAuth } from '@/lib/server-auth';
 import {
 	Sidebar,
 	SidebarContent,
@@ -19,10 +19,8 @@ import {
 	SidebarTrigger,
 } from '@/components/ui/sidebar';
 
-const userService = new UserLocalStorageService();
-
 export default async function AuthedLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-	const currentUser = userService.getCurrent();
+	const currentUser = await requireAuth();
 
 	return (
 		<div>
@@ -47,7 +45,7 @@ export default async function AuthedLayout({ children }: Readonly<{ children: Re
 						</SidebarGroup>
 					</SidebarContent>
 					<SidebarFooter>
-						<NavUser user={currentUser!} />
+						<NavUser user={currentUser} />
 					</SidebarFooter>
 					<SidebarRail />
 				</Sidebar>

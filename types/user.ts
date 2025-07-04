@@ -1,10 +1,4 @@
-export type UserRole = 'admin' | 'devops' | 'developer';
+import type { userSchema } from '@/common/validation/user';
+import type { z } from 'zod';
 
-export interface User {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	image?: string | null;
-	role: UserRole;
-}
+export type User = z.infer<typeof userSchema>;
