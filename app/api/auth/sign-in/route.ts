@@ -1,7 +1,9 @@
 import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from '@/common/constants/auth';
 import { signInSchema } from '@/common/validation/auth';
+import { AuthFirebaseService } from '@/services/auth';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+import { cookies } from 'next/headers';
 
 const accessSecret = process.env.JWT_ACCESS_SECRET!;
 const refreshSecret = process.env.JWT_REFRESH_SECRET!;
@@ -13,28 +15,74 @@ export async function POST(request: Request) {
 		const parsed = signInSchema.parse(body);
 		const { login, password } = parsed;
 
-		// TODO: Replace with your actual authentication logic
-		const user = await mockAuthenticate(login, password);
+		const authService = new AuthFirebaseService();
+		const response = await authService.signIn(login, password);
 
-		if (!user) {
+		if (response.status === 'error') {
+			if (response.code === 'USER_NOT_FOUND') {
+				return Response.json(
+					{
+						message: response.message,
+					},
+					{
+						status: 404,
+					}
+				);
+			}
+
+			if (response.code === 'INVALID_CREDENTIALS') {
+				return Response.json(
+					{
+						message: response.message,
+					},
+					{
+						status: 401,
+					}
+				);
+			}
+
 			return Response.json(
 				{
-					message: 'Invalid credentials',
+					message: response.message,
 				},
 				{
-					status: 401,
+					status: 400,
 				}
 			);
 		}
 
-		const accessToken = jwt.sign({ id: user.id, login: user.login, role: user.role }, accessSecret, { expiresIn: ACCESS_TOKEN_EXPIRY });
+		const user = response.user;
 
+		const accessToken = jwt.sign({ id: user.id, login: user.login, role: user.role }, accessSecret, { expiresIn: ACCESS_TOKEN_EXPIRY });
 		const refreshToken = jwt.sign({ id: user.id }, refreshSecret, { expiresIn: REFRESH_TOKEN_EXPIRY });
+
+		// Set HTTP-only cookies
+		const cookieStore = await cookies();
+		cookieStore.set('accessToken', accessToken, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'strict',
+			maxAge: 15 * 60, // 15 minutes in seconds
+			path: '/',
+		});
+
+		cookieStore.set('refreshToken', refreshToken, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'strict',
+			maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+			path: '/',
+		});
 
 		return Response.json(
 			{
-				accessToken,
-				refreshToken,
+				message: 'Successfully signed in',
+				user: {
+					id: user.id,
+					login: user.login,
+					role: user.role,
+					image: user.image,
+				},
 			},
 			{
 				status: 200,
@@ -63,12 +111,4 @@ export async function POST(request: Request) {
 			}
 		);
 	}
-}
-
-// Dummy auth function — replace with actual DB check
-async function mockAuthenticate(login: string, password: string) {
-	if (login === 'admin' && password === 'admin') {
-		return { id: 1, login: 'admin', role: 'admin' };
-	}
-	return null;
 }
