@@ -5,19 +5,18 @@ import { CheckIcon, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { UserLocalStorageService } from '@/services/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { User } from '@/types/user';
 import { useState } from 'react';
 import { useAssignUserToTask } from '@/hooks/task/useAssignUserToTask';
-
-const userService = new UserLocalStorageService();
+import { useUsers } from '@/hooks/user/useUsers';
 
 export const AssignUserToTask = ({ storyId, taskId }: { storyId: string; taskId: string }) => {
 	const [open, setOpen] = useState(false);
 	const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-	const users = userService.getAll();
+	const { data: users = [] } = useUsers({});
+
 	const assignUser = useAssignUserToTask({
 		storyId,
 	});
@@ -63,7 +62,7 @@ export const AssignUserToTask = ({ storyId, taskId }: { storyId: string; taskId:
 										<AvatarImage src={user.image ?? undefined} />
 										<AvatarFallback>CN</AvatarFallback>
 									</Avatar>
-									{user.firstName} {user.lastName}
+									{user.login}
 								</CommandItem>
 							))}
 						</CommandGroup>

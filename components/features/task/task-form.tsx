@@ -126,7 +126,7 @@ export const TaskForm = (props: TaskFormProps) => {
 				/>
 
 				<DialogFooter>
-					<Button type='submit'>Create</Button>
+					<Button type='submit'>Submnit</Button>
 				</DialogFooter>
 			</form>
 		</Form>

@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 type CreateStoryForm = {
 	variant: 'create';
 	projectId: string;
+	userId: string;
 	onSubmit: (values: z.infer<typeof createStorySchema>) => Promise<void>;
 	isSubmitting?: boolean;
 };
@@ -38,7 +39,7 @@ export const StoryForm = (props: StoryFormProps) => {
 						status: STORY_STATUSES[0],
 						priority: PRIORITIES[0],
 						projectId: props.projectId,
-						userId: 'dominik',
+						userId: props.userId,
 				  }
 				: props.story,
 	});

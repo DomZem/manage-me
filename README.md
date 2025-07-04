@@ -71,7 +71,7 @@ Model Zadania:
 
 - [x] zaprojektuj endpoint do logowania - pobiera login i hasło, weryfikuje i zwraca token (JWT) i refreshToken lub błąd
 - [x] zaprojektuj endpoint do odświeżania tokenu JWT
-- [] zaprojektuj endpoint do pobrania danych aktualnie zalogowanego użytkownika (pełny model użytkownika bez hasła)
+- [x] zaprojektuj endpoint do pobrania danych aktualnie zalogowanego użytkownika (pełny model użytkownika bez hasła)
 
 ### Technologie
 
@@ -107,11 +107,12 @@ Wykorzystaj dowolną technologię do utworzenia API - co lubisz. Jeśli nie masz
 - Zmień miejsce magazynowania danych w aplikacji z localStorage na bazę danych. Wykorzystaj bazę NoSQL (np. MongoDB, Google Firestore, Supabase).
 - Komunikację z bazą danych może się odbywać zarówno bezpośrednio z aplikacji webowej jak i z pośrednictwem serwera backendowego (do wyboru)
 
-## Lab 7 
+## Lab 7
 
 ### Testy e2e
+
 - Zaimplementuj testy e2e z użyciem dowolnej biblioteki/środowiska testowego
-- Testy powinny obejmować podstawowe funkcjonalności aplikacji: 
+- Testy powinny obejmować podstawowe funkcjonalności aplikacji:
   - Utworzenie nowego projektu, historyjki i zadania
   - Zmianę statusu zadania
   - Edycję zadania, historyjki, projektu

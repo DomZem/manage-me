@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { StoryForm } from './story-form';
 import { useCreateStory } from '@/hooks/story/useCreateStory';
 
-export const CreateStoryModal = ({ projectId }: { projectId: string }) => {
+export const CreateStoryModal = ({ projectId, userId }: { projectId: string; userId: string }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const handleClose = () => {
@@ -33,6 +33,7 @@ export const CreateStoryModal = ({ projectId }: { projectId: string }) => {
 				<StoryForm
 					variant='create'
 					projectId={projectId}
+					userId={userId}
 					isSubmitting={createStory.isPending}
 					onSubmit={async (data) => {
 						await createStory.mutateAsync(data);

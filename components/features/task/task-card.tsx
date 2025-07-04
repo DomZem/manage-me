@@ -1,9 +1,10 @@
 import { Card } from '@/components/ui/card';
 import type { Task } from '@/types/task';
 import { CircleCheck, CircleDot, Loader } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AssignUserToTask } from './assign-user-to-task';
 import { TaskCardOptions } from './task-card-options';
+import { UserAvatar } from '../user/UserAvatar';
+import dayjs from 'dayjs';
 
 export const TaskCard = ({ task }: { task: Task }) => {
 	return (
@@ -27,22 +28,14 @@ export const TaskCard = ({ task }: { task: Task }) => {
 						<span>
 							Priority: <strong className='capitalize'>{task.priority}</strong>
 						</span>
-						{/* <span>Created: {task.createdAt.toLocaleDateString()}</span> */}
-						{'startedAt' in task && <span>Started: {task.startedAt.toLocaleDateString()}</span>}
-						{'finishedAt' in task && <span>Finished: {task.finishedAt.toLocaleDateString()}</span>}
+						{task.status === 'doing' && <span>Started: {dayjs(task.startedAt).format('MMMM D, YYYY, h:mm')}</span>}
+						{task.status === 'done' && <span>Finished: {dayjs(task.finishedAt).format('MMMM D, YYYY, h:mm')}</span>}
 						<span>ETA: {task.elapsedTimeToFinish}h</span>
 					</div>
 				</div>
 
 				<div className='inline-flex items-center gap-2'>
-					{task.status === 'todo' ? (
-						<AssignUserToTask taskId={task.id} storyId={task.storyId} />
-					) : (
-						<Avatar className='size-9'>
-							<AvatarImage src='https://github.com/shadcn.png' />
-							<AvatarFallback>CN</AvatarFallback>
-						</Avatar>
-					)}
+					{task.status === 'todo' ? <AssignUserToTask taskId={task.id} storyId={task.storyId} /> : <UserAvatar userId={task.userId} />}
 					<TaskCardOptions task={task} />
 				</div>
 			</div>
