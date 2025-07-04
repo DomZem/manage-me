@@ -1,3 +1,4 @@
+import { UserFirebaseService } from '@/services/user/user-firebase';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
@@ -18,21 +19,29 @@ export async function GET() {
 		}
 
 		let payload: jwt.JwtPayload;
+
 		try {
 			payload = jwt.verify(accessToken, accessSecret) as jwt.JwtPayload;
 		} catch (error) {
 			console.error('Invalid access token:', error);
-
 			return Response.json({ error: 'Invalid or expired access token' }, { status: 401 });
+		}
+
+		const service = new UserFirebaseService();
+		const currentUser = await service.getOne(payload.id);
+
+		if (!currentUser) {
+			return Response.json(
+				{ error: 'User not found' },
+				{
+					status: 404,
+				}
+			);
 		}
 
 		return Response.json(
 			{
-				user: {
-					id: payload.id,
-					login: payload.login,
-					role: payload.role,
-				},
+				user: currentUser,
 			},
 			{
 				status: 200,
